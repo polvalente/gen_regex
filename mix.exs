@@ -1,4 +1,4 @@
-defmodule Regexgen.MixProject do
+defmodule GenRegex.MixProject do
   use Mix.Project
 
   def project do

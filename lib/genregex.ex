@@ -1,16 +1,10 @@
-defmodule Regexgen do
+defmodule GenRegex do
   @moduledoc """
-  Documentation for Regexgen.
+  This module parses Regex's and generates strings that pass the spec
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Regexgen.hello
-      :world
-
+  Receives a Regex and returns a tokenized version of it
   """
   def lex(regexp) do
     regexp

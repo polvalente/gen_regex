@@ -377,85 +377,85 @@ yystate(S, Ics, Line, Tlen, Action, Alen) ->
 %% {token,Token} | {end_token, Token} | skip_token | {error,String}.
 %% Generated action function.
 
-yyaction(0, _, _, _) ->
-    yyaction_0();
-yyaction(1, _, _, _) ->
-    yyaction_1();
-yyaction(2, _, _, _) ->
-    yyaction_2();
-yyaction(3, _, _, _) ->
-    yyaction_3();
-yyaction(4, _, _, _) ->
-    yyaction_4();
-yyaction(5, _, _, _) ->
-    yyaction_5();
-yyaction(6, _, _, _) ->
-    yyaction_6();
-yyaction(7, _, _, _) ->
-    yyaction_7();
-yyaction(8, _, _, _) ->
-    yyaction_8();
-yyaction(9, TokenLen, YYtcs, _) ->
+yyaction(0, _, _, TokenLine) ->
+    yyaction_0(TokenLine);
+yyaction(1, _, _, TokenLine) ->
+    yyaction_1(TokenLine);
+yyaction(2, _, _, TokenLine) ->
+    yyaction_2(TokenLine);
+yyaction(3, _, _, TokenLine) ->
+    yyaction_3(TokenLine);
+yyaction(4, _, _, TokenLine) ->
+    yyaction_4(TokenLine);
+yyaction(5, _, _, TokenLine) ->
+    yyaction_5(TokenLine);
+yyaction(6, _, _, TokenLine) ->
+    yyaction_6(TokenLine);
+yyaction(7, _, _, TokenLine) ->
+    yyaction_7(TokenLine);
+yyaction(8, _, _, TokenLine) ->
+    yyaction_8(TokenLine);
+yyaction(9, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
-    yyaction_9(TokenChars);
-yyaction(10, TokenLen, YYtcs, _) ->
+    yyaction_9(TokenChars, TokenLine);
+yyaction(10, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
-    yyaction_10(TokenChars);
+    yyaction_10(TokenChars, TokenLine);
 yyaction(_, _, _, _) -> error.
 
--compile({inline,yyaction_0/0}).
+-compile({inline,yyaction_0/1}).
 -file("lib/grammar/lexer.xrl", 4).
-yyaction_0() ->
-     { token, { '[' } } .
+yyaction_0(TokenLine) ->
+     { token, { '[', TokenLine } } .
 
--compile({inline,yyaction_1/0}).
+-compile({inline,yyaction_1/1}).
 -file("lib/grammar/lexer.xrl", 5).
-yyaction_1() ->
-     { token, { ']' } } .
+yyaction_1(TokenLine) ->
+     { token, { ']', TokenLine } } .
 
--compile({inline,yyaction_2/0}).
+-compile({inline,yyaction_2/1}).
 -file("lib/grammar/lexer.xrl", 6).
-yyaction_2() ->
-     { token, { '(' } } .
+yyaction_2(TokenLine) ->
+     { token, { '(', TokenLine } } .
 
--compile({inline,yyaction_3/0}).
+-compile({inline,yyaction_3/1}).
 -file("lib/grammar/lexer.xrl", 7).
-yyaction_3() ->
-     { token, { ')' } } .
+yyaction_3(TokenLine) ->
+     { token, { ')', TokenLine } } .
 
--compile({inline,yyaction_4/0}).
+-compile({inline,yyaction_4/1}).
 -file("lib/grammar/lexer.xrl", 8).
-yyaction_4() ->
-     { token, { '|' } } .
+yyaction_4(TokenLine) ->
+     { token, { '|', TokenLine } } .
 
--compile({inline,yyaction_5/0}).
+-compile({inline,yyaction_5/1}).
 -file("lib/grammar/lexer.xrl", 9).
-yyaction_5() ->
-     { token, { '*' } } .
+yyaction_5(TokenLine) ->
+     { token, { '*', TokenLine } } .
 
--compile({inline,yyaction_6/0}).
+-compile({inline,yyaction_6/1}).
 -file("lib/grammar/lexer.xrl", 10).
-yyaction_6() ->
-     { token, { '+' } } .
+yyaction_6(TokenLine) ->
+     { token, { '+', TokenLine } } .
 
--compile({inline,yyaction_7/0}).
+-compile({inline,yyaction_7/1}).
 -file("lib/grammar/lexer.xrl", 11).
-yyaction_7() ->
-     { token, { '-' } } .
+yyaction_7(TokenLine) ->
+     { token, { '-', TokenLine } } .
 
--compile({inline,yyaction_8/0}).
+-compile({inline,yyaction_8/1}).
 -file("lib/grammar/lexer.xrl", 12).
-yyaction_8() ->
-     { token, { '.' } } .
+yyaction_8(TokenLine) ->
+     { token, { '.', TokenLine } } .
 
--compile({inline,yyaction_9/1}).
+-compile({inline,yyaction_9/2}).
 -file("lib/grammar/lexer.xrl", 13).
-yyaction_9(TokenChars) ->
-     { token, { escape, TokenChars } } .
+yyaction_9(TokenChars, TokenLine) ->
+     { token, { escape, TokenLine, TokenChars } } .
 
--compile({inline,yyaction_10/1}).
+-compile({inline,yyaction_10/2}).
 -file("lib/grammar/lexer.xrl", 14).
-yyaction_10(TokenChars) ->
-     { token, { atom, TokenChars } } .
+yyaction_10(TokenChars, TokenLine) ->
+     { token, { atom, TokenLine, TokenChars } } .
 
 -file("/Users/valente/.asdf/installs/erlang/20.3.1/lib/parsetools-2.1.6/include/leexinc.hrl", 313).

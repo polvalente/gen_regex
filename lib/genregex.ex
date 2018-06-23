@@ -7,9 +7,20 @@ defmodule GenRegex do
   Receives a Regex and returns a tokenized version of it
   """
   def lex(regexp) do
-    regexp
-    |> Regex.source()
-    |> String.to_charlist()
-    |> :lexer.string()
+    {:ok, tokens, _} =
+      regexp
+      |> Regex.source()
+      |> String.to_charlist()
+      |> :lexer.string()
+
+    tokens
+  end
+
+  def parse(tokens) do
+    {:ok, exprs} =
+      tokens
+      |> :parser.parse()
+
+    exprs
   end
 end

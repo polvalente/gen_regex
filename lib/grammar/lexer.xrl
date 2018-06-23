@@ -3,16 +3,16 @@ Definitions.
 ATOM                 = .
 
 Rules.
-\[                   : {token, {'['}}.
-\]                   : {token, {']'}}.
-\(                   : {token, {'('}}.
-\)                   : {token, {')'}}.
-\|                   : {token, {'|'}}.
-\*                   : {token, {'*'}}.
-\+                   : {token, {'+'}}.
-\-                   : {token, {'-'}}.
-\.                   : {token, {'.'}}.
-\\.                  : {token, {escape, TokenChars}}.
-{ATOM}               : {token, {atom, TokenChars}}.
+\[                   : {token, {'[', TokenLine}}.
+\]                   : {token, {']', TokenLine}}.
+\(                   : {token, {'(', TokenLine}}.
+\)                   : {token, {')', TokenLine}}.
+\|                   : {token, {'|', TokenLine}}.
+\*                   : {token, {'*', TokenLine}}.
+\+                   : {token, {'+', TokenLine}}.
+\-                   : {token, {'-', TokenLine}}.
+\.                   : {token, {'.', TokenLine}}.
+\\.                  : {token, {escape, TokenLine, TokenChars}}.
+{ATOM}               : {token, {atom, TokenLine, TokenChars}}.
 
 Erlang code.

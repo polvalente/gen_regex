@@ -12,7 +12,10 @@ defmodule Regexgen do
       :world
 
   """
-  def hello do
-    :world
+  def lex(regexp) do
+    regexp
+    |> Regex.source()
+    |> String.to_charlist()
+    |> :lexer.string()
   end
 end

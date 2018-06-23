@@ -12,7 +12,7 @@ Rules.
 \+                   : {token, {'+'}}.
 \-                   : {token, {'-'}}.
 \.                   : {token, {'.'}}.
-:\.                   : {token, {escape, TokenChars}}.
+\\.                  : {token, {escape, TokenChars}}.
 {ATOM}               : {token, {atom, TokenChars}}.
 
 Erlang code.

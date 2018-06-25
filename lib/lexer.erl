@@ -401,9 +401,8 @@ yyaction(7, _, _, TokenLine) ->
     yyaction_7(TokenLine);
 yyaction(8, _, _, TokenLine) ->
     yyaction_8(TokenLine);
-yyaction(9, TokenLen, YYtcs, TokenLine) ->
-    TokenChars = yypre(YYtcs, TokenLen),
-    yyaction_9(TokenChars, TokenLine);
+yyaction(9, _, _, TokenLine) ->
+    yyaction_9(TokenLine);
 yyaction(10, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
     yyaction_10(TokenChars, TokenLine);
@@ -457,10 +456,10 @@ yyaction_7(TokenLine) ->
 yyaction_8(TokenLine) ->
      { token, { '.', TokenLine } } .
 
--compile({inline,yyaction_9/2}).
+-compile({inline,yyaction_9/1}).
 -file("lib/grammar/lexer.xrl", 13).
-yyaction_9(TokenChars, TokenLine) ->
-     { token, { '?', TokenLine, TokenChars } } .
+yyaction_9(TokenLine) ->
+     { token, { '?', TokenLine } } .
 
 -compile({inline,yyaction_10/2}).
 -file("lib/grammar/lexer.xrl", 14).

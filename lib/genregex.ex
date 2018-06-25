@@ -46,7 +46,10 @@ defmodule GenRegex do
   end
 
   def interpret({:escape, value}) do
-    ''
+    case value do
+      '\\(' -> '('
+      '\\)' -> ')'
+    end
   end
 
   def interpret({:word, elems}) do

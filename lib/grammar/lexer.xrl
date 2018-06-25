@@ -12,7 +12,7 @@ Rules.
 \+                   : {token, {'+', TokenLine}}.
 \-                   : {token, {'-', TokenLine}}.
 \.                   : {token, {'.', TokenLine}}.
-\?                   : {token, {'?', TokenLine, TokenChars}}.
+\?                   : {token, {'?', TokenLine}}.
 \\.                  : {token, {escape, TokenLine, TokenChars}}.
 {ATOM}               : {token, {atom, TokenLine, TokenChars}}.
 

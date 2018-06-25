@@ -64,7 +64,7 @@ defmodule GenRegex do
     first = ord(first)
     last = ord(last)
 
-    result = first..last
+    first..last
     |> Enum.to_list()
   end
 
@@ -87,11 +87,5 @@ defmodule GenRegex do
     char
     |> to_string()
     |> :binary.decode_unsigned()
-  end
-
-  defp chr(num) do
-    num
-    |> :binary.encode_unsigned
-    |> to_charlist()
   end
 end

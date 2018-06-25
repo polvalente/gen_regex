@@ -8,7 +8,9 @@ set_elems
 set
 repzero
 reponce
-optelem.
+optelem
+wordlist
+listword.
 
 Terminals 
 '(' 
@@ -26,13 +28,14 @@ atom.
 
 Rootsymbol elem.
 
+elem -> word                     : {word, '$1'}.
 elem -> list                     : {list, '$1'}. 
 elem -> set                      : {set, '$1'}.
-elem -> word                     : {word, '$1'}.
 elem -> repzero                  : {repzero, '$1'}.
 elem -> reponce                  : {reponce, '$1'}.
 elem -> optelem                  : {optelem, '$1'}.
-elem -> word set                 : {setword, '$1', '$2'}.
+elem -> listword                 : {listword, '$1'}.
+elem -> wordlist                 : {wordlist, '$1'}.
 elem -> '.'                      : {wildcard, '.'}.
 
 list_elems -> elem               : ['$1']. 
@@ -57,6 +60,9 @@ range -> atom '-' atom           : {extract_token('$1'), extract_token('$3')}.
 repzero -> elem '*'              : '$1'.
 reponce -> elem '+'              : '$1'.
 optelem -> elem '?'              : '$1'.
+
+wordlist -> word list            : {'$1', '$2'}.
+listword -> list word            : {'$1', '$2'}.
 
 Erlang code.
 extract_token({_Token, _Line, Value}) -> Value.

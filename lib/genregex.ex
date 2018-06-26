@@ -6,7 +6,6 @@ defmodule GenRegex do
   @doc """
   Receives a Regex and returns a tokenized version of it
   """
-
   def generate_from(regexp) do
     regexp
     |> lex()

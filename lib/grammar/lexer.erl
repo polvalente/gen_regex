@@ -305,7 +305,7 @@ adjust_line(T, A, [_|Cs], L) ->
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("lib/lexer.erl", 307).
+-file("lib/grammar/lexer.erl", 307).
 yystate() -> 12.
 
 yystate(13, Ics, Line, Tlen, _, _) ->

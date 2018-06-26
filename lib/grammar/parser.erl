@@ -176,7 +176,7 @@ yecctoken2string(Other) ->
 
 
 
--file("lib/parser.erl", 179).
+-file("lib/grammar/parser.erl", 179).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->

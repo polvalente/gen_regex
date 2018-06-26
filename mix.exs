@@ -6,7 +6,7 @@ defmodule GenRegex.MixProject do
       app: :regexgen,
       version: "0.1.0",
       elixir: "~> 1.6",
-      erlc_paths: ["lib"],
+      erlc_paths: ["lib/grammar"],
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]

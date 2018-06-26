@@ -141,4 +141,109 @@ defmodule GenRegex.ParserTest do
       ]
     ]
   end
+
+  test "Should parse []*" do
+    ast = parse(~r/[abc]*/)
+    assert ast == [
+      repzero: [
+        set: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse []+" do
+    ast = parse(~r/[abc]+/)
+    assert ast == [
+      reponce: [
+        set: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse []?" do
+    ast = parse(~r/[abc]?/)
+    assert ast == [
+      optelem: [
+        set: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse ()*" do
+    ast = parse(~r/(abc|def)*/)
+    assert ast == [
+      repzero: [
+        list: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ],
+          word: [
+            atom: 'd',
+            atom: 'e',
+            atom: 'f'
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse ()+" do
+    ast = parse(~r/(abc|def)+/)
+    assert ast == [
+      reponce: [
+        list: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ],
+          word: [
+            atom: 'd',
+            atom: 'e',
+            atom: 'f'
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse ()?" do
+    ast = parse(~r/(abc|def)?/)
+    assert ast == [
+      optelem: [
+        list: [
+          word: [
+            atom: 'a',
+            atom: 'b',
+            atom: 'c'
+          ],
+          word: [
+            atom: 'd',
+            atom: 'e',
+            atom: 'f'
+          ]
+        ]
+      ]
+    ]
+  end
 end

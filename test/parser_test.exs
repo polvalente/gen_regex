@@ -10,7 +10,7 @@ defmodule GenRegex.ParserTest do
   end
 
   test "Should parse word (with atoms, range, escape)" do
-    ast = parse(~r/aA0!@¨\w0-9/)
+    ast = parse(~r/aA0!@¨\w[0-9]/)
     assert ast == [
       word: [
         atom: 'a',
@@ -20,19 +20,23 @@ defmodule GenRegex.ParserTest do
         atom: '@',
         atom: [168],
         escape: '\\w',
+      ],
+      set: [
         range: {'0', '9'}
       ]
     ]
   end
 
-  test "Should parse list" do
+  test "Should parse option" do
     ast = parse(~r/(foo)/)
     assert ast == [
-      list: [
-        word: [
-          atom: 'f',
-          atom: 'o',
-          atom: 'o'
+      option: [
+        choice: [
+          word: [
+            atom: 'f',
+            atom: 'o',
+            atom: 'o'
+          ]
         ]
       ]
     ]
@@ -90,22 +94,26 @@ defmodule GenRegex.ParserTest do
     assert ast == [wildcard: :.]
   end
 
-  test "Should parse list+word" do
+  test "Should parse option+word" do
     ast = parse(~r/(first|last)_name/)
     assert ast == [
-      list: [
-        word: [
-          atom: 'f',
-          atom: 'i',
-          atom: 'r',
-          atom: 's',
-          atom: 't'
+      option: [
+        choice: [
+          word: [
+            atom: 'f',
+            atom: 'i',
+            atom: 'r',
+            atom: 's',
+            atom: 't'
+          ]
         ],
-        word: [
-          atom: 'l',
-          atom: 'a',
-          atom: 's',
-          atom: 't'
+        choice: [
+          word: [
+            atom: 'l',
+            atom: 'a',
+            atom: 's',
+            atom: 't'
+          ]
         ]
       ],
       word: [
@@ -118,7 +126,7 @@ defmodule GenRegex.ParserTest do
     ]
   end
 
-  test "Should parse word+list" do
+  test "Should parse word+option" do
     ast = parse(~r/foo_(bar|baz)/)
     assert ast == [
       word: [
@@ -127,16 +135,20 @@ defmodule GenRegex.ParserTest do
         atom: 'o',
         atom: '_'
       ],
-      list: [
-        word: [
-          atom: 'b',
-          atom: 'a',
-          atom: 'r'
+      option: [
+        choice: [
+          word: [
+            atom: 'b',
+            atom: 'a',
+            atom: 'r'
+          ]
         ],
-        word: [
-          atom: 'b',
-          atom: 'a',
-          atom: 'z'
+        choice: [
+          word: [
+            atom: 'b',
+            atom: 'a',
+            atom: 'z'
+          ]
         ]
       ]
     ]
@@ -191,16 +203,20 @@ defmodule GenRegex.ParserTest do
     ast = parse(~r/(abc|def)*/)
     assert ast == [
       repzero: [
-        list: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
+        option: [
+          choice: [
+            word: [
+              atom: 'a',
+              atom: 'b',
+              atom: 'c'
+            ]
           ],
-          word: [
-            atom: 'd',
-            atom: 'e',
-            atom: 'f'
+          choice: [
+            word: [
+              atom: 'd',
+              atom: 'e',
+              atom: 'f'
+            ]
           ]
         ]
       ]
@@ -211,16 +227,20 @@ defmodule GenRegex.ParserTest do
     ast = parse(~r/(abc|def)+/)
     assert ast == [
       reponce: [
-        list: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
+        option: [
+          choice: [
+            word: [
+              atom: 'a',
+              atom: 'b',
+              atom: 'c'
+            ],
           ],
-          word: [
-            atom: 'd',
-            atom: 'e',
-            atom: 'f'
+          choice: [
+            word: [
+              atom: 'd',
+              atom: 'e',
+              atom: 'f'
+            ]
           ]
         ]
       ]
@@ -231,16 +251,40 @@ defmodule GenRegex.ParserTest do
     ast = parse(~r/(abc|def)?/)
     assert ast == [
       optelem: [
-        list: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
+        option: [
+          choice: [
+            word: [
+              atom: 'a',
+              atom: 'b',
+              atom: 'c'
+            ],
           ],
+          choice: [
+            word: [
+              atom: 'd',
+              atom: 'e',
+              atom: 'f'
+            ]
+          ]
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse (\.[a-zA-Z0-9]+) correctly" do
+    ast = parse(~r/(\.[a-zA-Z0-9]+)/)
+    assert ast == [
+      option: [
+        choice: [
           word: [
-            atom: 'd',
-            atom: 'e',
-            atom: 'f'
+            escape: '\\.'
+          ],
+          reponce: [
+            set: [
+              range: {'a','z'},
+              range: {'A','Z'},
+              range: {'0','9'}
+            ]
           ]
         ]
       ]

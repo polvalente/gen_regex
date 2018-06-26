@@ -3,14 +3,13 @@ word
 list
 list_elems 
 elem 
+elems
 range
 set_elems
 set
 repzero
 reponce
-optelem
-wordlist
-listword.
+optelem.
 
 Terminals 
 '(' 
@@ -23,46 +22,42 @@ Terminals
 '+'
 '?'
 '.'
+''
 escape
 atom.
 
-Rootsymbol elem.
+Rootsymbol elems.
 
-elem -> word                     : {word, '$1'}.
-elem -> list                     : {list, '$1'}. 
-elem -> set                      : {set, '$1'}.
-elem -> repzero                  : {repzero, '$1'}.
-elem -> reponce                  : {reponce, '$1'}.
-elem -> optelem                  : {optelem, '$1'}.
-elem -> listword                 : {listword, '$1'}.
-elem -> wordlist                 : {wordlist, '$1'}.
-elem -> '.'                      : {wildcard, '.'}.
+elems -> elem                       : '$1'.
+elems -> elem elems                 : '$1' ++ '$2'.
 
-list_elems -> elem               : ['$1']. 
-list_elems -> elem '|' list_elems: ['$1' | '$3' ].
+elem -> word                        : [{word, '$1'}].
+elem -> list                        : [{list, '$1'}]. 
+elem -> set                         : [{set, '$1'}].
+elem -> repzero                     : ['$1'].
+elem -> reponce                     : ['$1'].
+elem -> optelem                     : ['$1'].
+elem -> '.'                         : [{wildcard, '.'}].
 
-set_elems -> elem                : ['$1']. 
-set_elems -> elem set_elems      : ['$1' | '$2' ].
+list -> '(' ')'                     : [].
+list -> '(' list_elems ')'          : '$2'.
+list_elems -> elem                  : '$1'.
+list_elems -> elem '|' list_elems   : '$1' ++ '$3'.
 
-list -> '(' ')'                  : [].
-list -> '(' list_elems ')'       : '$2'.
+set -> '[' ']'                      : [].
+set -> '[' elems ']'                : '$2'.
 
-set -> '[' ']'                   : [].
-set -> '[' set_elems ']'         : '$2'.
+word -> ''                          : [{atom, ''}].
+word -> atom                        : [{atom, extract_token('$1')}].
+word -> escape                      : [{escape, extract_token('$1')}].
+word -> range                       : ['$1'].
+word -> word word                   : '$1' ++ '$2'.
 
-word -> atom                     : {atom, extract_token('$1')}.
-word -> escape                   : {escape, extract_token('$1')}.
-word -> range                    : {range, '$1'}.
-word -> word word                : ['$1' | '$2'].
+range -> atom '-' atom              : {range, {extract_token('$1'), extract_token('$3')}}.
 
-range -> atom '-' atom           : {extract_token('$1'), extract_token('$3')}.
-
-repzero -> elem '*'              : '$1'.
-reponce -> elem '+'              : '$1'.
-optelem -> elem '?'              : '$1'.
-
-wordlist -> word list            : {'$1', '$2'}.
-listword -> list word            : {'$1', '$2'}.
+repzero -> elem '*'                 : {repzero, '$1'}.
+reponce -> elem '+'                 : {reponce, '$1'}.
+optelem -> elem '?'                 : {optelem, '$1'}.
 
 Erlang code.
 extract_token({_Token, _Line, Value}) -> Value.

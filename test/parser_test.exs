@@ -57,10 +57,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse *" do
     ast = parse(~r/a*/)
     assert ast == [
-      repzero: [
-        word: [
-          atom: 'a'
-        ]
+      repexpr: [
+        [
+          word: [
+            atom: 'a'
+          ]
+        ],
+        0,
+        nil
       ]
     ]
   end
@@ -68,10 +72,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse +" do
     ast = parse(~r/a+/)
     assert ast == [
-      reponce: [
-        word: [
-          atom: 'a'
-        ]
+      repexpr: [
+        [
+          word: [
+            atom: 'a'
+          ]
+        ],
+        1,
+        nil
       ]
     ]
   end
@@ -79,10 +87,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse ?" do
     ast = parse(~r/a?/)
     assert ast == [
-      optelem: [
-        word: [
-          atom: 'a'
-        ]
+      repexpr: [
+        [
+          word: [
+            atom: 'a'
+          ]
+        ],
+        0,
+        1
       ]
     ]
   end
@@ -155,12 +167,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse []*" do
     ast = parse(~r/[abc]*/)
     assert ast == [
-      repzero: [
-        set: [
+      repexpr: [
+        [set: [
           atom: 'a',
           atom: 'b',
           atom: 'c'
-        ]
+        ]],
+        0,
+        nil
       ]
     ]
   end
@@ -168,12 +182,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse []+" do
     ast = parse(~r/[abc]+/)
     assert ast == [
-      reponce: [
-        set: [
+      repexpr: [
+        [set: [
           atom: 'a',
           atom: 'b',
           atom: 'c'
-        ]
+        ]],
+        1,
+        nil
       ]
     ]
   end
@@ -181,12 +197,14 @@ defmodule GenRegex.ParserTest do
   test "Should parse []?" do
     ast = parse(~r/[abc]?/)
     assert ast == [
-      optelem: [
-        set: [
+      repexpr: [
+        [set: [
           atom: 'a',
           atom: 'b',
           atom: 'c'
-        ]
+        ]],
+        0,
+        1
       ]
     ]
   end
@@ -194,23 +212,27 @@ defmodule GenRegex.ParserTest do
   test "Should parse ()*" do
     ast = parse(~r/(abc|def)*/)
     assert ast == [
-      repzero: [
-        option: [
-          choice: [
-            word: [
-              atom: 'a',
-              atom: 'b',
-              atom: 'c'
-            ]
-          ],
-          choice: [
-            word: [
-              atom: 'd',
-              atom: 'e',
-              atom: 'f'
+      repexpr: [
+        [
+          option: [
+            choice: [
+              word: [
+                atom: 'a',
+                atom: 'b',
+                atom: 'c'
+              ]
+            ],
+            choice: [
+              word: [
+                atom: 'd',
+                atom: 'e',
+                atom: 'f'
+              ]
             ]
           ]
-        ]
+        ],
+        0,
+        nil
       ]
     ]
   end
@@ -218,8 +240,8 @@ defmodule GenRegex.ParserTest do
   test "Should parse ()+" do
     ast = parse(~r/(abc|def)+/)
     assert ast == [
-      reponce: [
-        option: [
+      repexpr: [
+        [option: [
           choice: [
             word: [
               atom: 'a',
@@ -234,7 +256,9 @@ defmodule GenRegex.ParserTest do
               atom: 'f'
             ]
           ]
-        ]
+        ]],
+        1,
+        nil
       ]
     ]
   end
@@ -242,8 +266,8 @@ defmodule GenRegex.ParserTest do
   test "Should parse ()?" do
     ast = parse(~r/(abc|def)?/)
     assert ast == [
-      optelem: [
-        option: [
+      repexpr: [
+        [option: [
           choice: [
             word: [
               atom: 'a',
@@ -258,7 +282,9 @@ defmodule GenRegex.ParserTest do
               atom: 'f'
             ]
           ]
-        ]
+        ]],
+        0,
+        1
       ]
     ]
   end
@@ -271,12 +297,14 @@ defmodule GenRegex.ParserTest do
           word: [
             escape: '\\.'
           ],
-          reponce: [
-            set: [
+          repexpr: [
+            [set: [
               range: {'a','z'},
               range: {'A','Z'},
               range: {'0','9'}
-            ]
+            ]],
+            1,
+            nil
           ]
         ]
       ]

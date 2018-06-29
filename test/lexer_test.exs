@@ -3,12 +3,14 @@ defmodule GenRegex.LexerTest do
 
   test "Should lex characters as atoms" do
     tokens = GenRegex.lex(~r/aA0!/)
+    [token1, token2, token3, token4] = tokens
     assert tokens == [
       {:atom, 1, 'a'},
       {:atom, 1, 'A'},
       {:atom, 1, '0'},
       {:atom, 1, '!'}
     ]
+
   end
 
   test "Should lex brackets as special tokens" do
@@ -82,6 +84,15 @@ defmodule GenRegex.LexerTest do
     tokens = GenRegex.lex(~r/\x/)
     assert tokens == [
       {:escape, 1, '\\x'}
+    ]
+  end
+
+  test "Should lex , as special token" do
+    tokens = GenRegex.lex(~r/a,b/)
+    assert tokens == [
+      {:atom, 1, 'a'},
+      {:',', 1},
+      {:atom, 1, 'b'}
     ]
   end
 end

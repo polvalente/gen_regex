@@ -46,11 +46,9 @@ defmodule GenRegex.ParserTest do
     ast = parse(~r/[foo.]/)
     assert ast == [
       set: [
-        word: [
-          atom: 'f',
-          atom: 'o',
-          atom: 'o'
-        ],
+        atom: 'f',
+        atom: 'o',
+        atom: 'o',
         wildcard: :.
       ]
     ]
@@ -159,11 +157,9 @@ defmodule GenRegex.ParserTest do
     assert ast == [
       repzero: [
         set: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
-          ]
+          atom: 'a',
+          atom: 'b',
+          atom: 'c'
         ]
       ]
     ]
@@ -174,11 +170,9 @@ defmodule GenRegex.ParserTest do
     assert ast == [
       reponce: [
         set: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
-          ]
+          atom: 'a',
+          atom: 'b',
+          atom: 'c'
         ]
       ]
     ]
@@ -189,11 +183,9 @@ defmodule GenRegex.ParserTest do
     assert ast == [
       optelem: [
         set: [
-          word: [
-            atom: 'a',
-            atom: 'b',
-            atom: 'c'
-          ]
+          atom: 'a',
+          atom: 'b',
+          atom: 'c'
         ]
       ]
     ]

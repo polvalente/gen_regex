@@ -65,6 +65,19 @@ defmodule GenRegex.Interpreter do
     |> Map.put(:max, max)
   end
 
+  def interpret({:range, val}) do
+    [first, last] =
+      val
+      |> to_string()
+      |> String.split("-")
+      |> Enum.map(&(:binary.decode_unsigned(&1)))
+
+    %Generator{
+      type: :range,
+      value: first..last
+    }
+  end
+
   def interpret(ast) do
     result =
       ast

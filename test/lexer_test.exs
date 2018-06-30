@@ -39,6 +39,14 @@ defmodule GenRegex.LexerTest do
     ]
   end
 
+  test "Should lex ^ as special token" do
+    tokens = GenRegex.lex(~r/^a/)
+    assert tokens == [
+      {:'^', 1},
+      {:atom, 1, 'a'}
+    ]
+  end
+
   test "Should lex * as special token" do
     tokens = GenRegex.lex(~r/a*/)
     assert tokens == [

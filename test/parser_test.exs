@@ -57,6 +57,17 @@ defmodule GenRegex.ParserTest do
     ]
   end
 
+  test "Should parse negset" do
+    ast = parse(~r/[^foo]/)
+    assert ast == [
+      negset: [
+        atom: 'f',
+        atom: 'o',
+        atom: 'o',
+      ]
+    ]
+  end
+
   test "Should parse *" do
     ast = parse(~r/a*/)
     assert ast == [
@@ -375,6 +386,22 @@ defmodule GenRegex.ParserTest do
           atom: '5',
           atom: '6']
         ]
+      ]
+    ]
+  end
+
+  test "Should parse ^ as atom in word" do
+    ast = parse(~r/^ab[ab^]/)
+    assert ast == [
+      word: [
+        atom: :^,
+        atom: 'a',
+        atom: 'b'
+      ],
+      set: [
+        atom: 'a',
+        atom: 'b',
+        atom: :^
       ]
     ]
   end

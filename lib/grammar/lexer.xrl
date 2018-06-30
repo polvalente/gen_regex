@@ -16,6 +16,7 @@ Rules.
 \+                   : {token, {'+', TokenLine}}.
 \.                   : {token, {'.', TokenLine}}.
 \?                   : {token, {'?', TokenLine}}.
+\^                   : {token, {'^', TokenLine}}.
 \\.                  : {token, {escape, TokenLine, TokenChars}}.
 {RANGE}              : {token, {range, TokenLine, TokenChars}}.
 {COMMA}              : {token, {comma, TokenLine, TokenChars}}.

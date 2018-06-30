@@ -151,6 +151,22 @@ defmodule GenRegex.InterpreterTest do
     ]
   end
 
+  test "Should parse ([^a-zA-Z0-9]+) correctly (negset of ranges +)" do
+    genexp = interpret(~r/[^a-zA-Z0-9]+/)
+    assert genexp == [
+      generator([
+        generator(97..122, :range),
+        generator(65..90, :range),
+        generator(48..57, :range),
+      ], :negset, 1, nil)
+    ]
+  end
+
+  test "Should parse range as word outside of set" do
+    genexp = interpret(~r/a-zA-Z0-9/)
+    assert genexp == [generator("a-zA-Z0-9", :word)]
+  end
+
   #test "Should parse a{0456} as repexpr ('04564','0456')" do
   #  genexp = interpret(~r/a{0456}/)
   #end

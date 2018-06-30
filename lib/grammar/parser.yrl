@@ -51,7 +51,6 @@ set -> '[' ']'                                                          : [].
 set -> '[' set_elems ']'                                                : '$2'.
 neg_set -> '[' '^' set_elems ']'                                        : '$3'.
 
-set_elem  -> range                                                      : [{range, extract_token('$1')}].
 set_elem  -> elem                                                       : '$1'.
 set_elem  -> word                                                       : '$1'.
 set_elems -> set_elem                                                   : '$1'.
@@ -68,6 +67,7 @@ chr -> escape                                                           : [{esca
 
 word -> ''                                                              : [].
 word -> comma                                                           : [{atom, extract_token('$1')}].
+word -> range                                                           : [{range, extract_token('$1')}].
 word -> chr                                                             : '$1'.
 word -> word word                                                       : '$1' ++ '$2'.
 

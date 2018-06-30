@@ -6,10 +6,10 @@ defmodule GenRegex.Interpreter do
 
   alias GenRegex.Generator
 
-  def interpret({:word, elems}) do
+  defp interpret({:word, elems}, _parent) do
     result =
       elems
-      |> Enum.map(&interpret/1)
+      |> Enum.map(&(interpret(&1,:word)))
       |> Enum.join()
     %Generator{
       type: :word,
@@ -17,10 +17,10 @@ defmodule GenRegex.Interpreter do
     }
   end
 
-  def interpret({:option, choices}) do
+  defp interpret({:option, choices}, _parent) do
     result =
       choices
-      |> Enum.map(&interpret/1)
+      |> Enum.map(&(interpret(&1,:option)))
       |> List.flatten()
 
     %Generator{
@@ -29,43 +29,36 @@ defmodule GenRegex.Interpreter do
     }
   end
 
-  def interpret({:choice, choice}),
-    do: interpret(choice)
+  defp interpret({:choice, choice}, _parent),
+    do: interpret(choice, :choice)
 
-  def interpret({:set, items}),
+  defp interpret({:set, items}, _parent),
     do: do_interpret_set(:set, items)
 
-  def interpret({:negset, items}),
+  defp interpret({:negset, items}, _parent),
     do: do_interpret_set(:negset, items)
 
-  def interpret({:wildcard, :.}),
+  defp interpret({:wildcard, :.}, _parent),
     do: %Generator{
       type: :wildcard,
       value: nil
     }
 
 
-  def interpret({:atom, val}), do: to_string(val)
+  defp interpret({:atom, val}, _parent), do: to_string(val)
 
-  def interpret({:repexpr, [expr, min, max]}) do
+  defp interpret({:repexpr, [expr, min, max]}, _parent) do
     [result] =
       expr
       |> List.wrap()
-      |> Enum.map(&(
-        case &1 do
-          {:atom, val} ->
-            interpret({:word, [{:atom, val}]})
-          val -> val
-        end)
-      )
-      |> interpret()
+      |> interpret(:repexpr)
 
     result
     |> Map.put(:min, min)
     |> Map.put(:max, max)
   end
 
-  def interpret({:range, val}) do
+  defp interpret({:range, val}, :set) do
     [first, last] =
       val
       |> to_string()
@@ -78,19 +71,33 @@ defmodule GenRegex.Interpreter do
     }
   end
 
-  def interpret(ast) do
+  defp interpret({:range, val}, :negset), do:
+    interpret({:range, val}, :set)
+
+  defp interpret({:range, val}, :word), do: to_string(val)
+
+  defp interpret({:range, val}, _) do
+    %Generator{
+      type: :word,
+      value: to_string(val)
+    }
+  end
+
+  defp interpret(ast, parent) do
     result =
       ast
-      |> Enum.map(&interpret/1)
+      |> Enum.map(&(interpret(&1,parent)))
 
     result
   end
+
+  def interpret(ast), do: interpret(ast, nil)
 
   defp do_interpret_set(type, items) do
     result =
       items
       |> Enum.uniq()
-      |> Enum.map(&interpret/1)
+      |> Enum.map(&(interpret(&1, :set)))
       |> Enum.map(fn item ->
         case item do
           %Generator{type: :wildcard} -> :wildcard

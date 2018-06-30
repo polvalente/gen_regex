@@ -12,6 +12,7 @@ defmodule GenRegex.Interpreter do
       |> Enum.map(&interpret/1)
       |> Enum.join()
     %Generator{
+      type: :word,
       value: result
     }
   end
@@ -28,48 +29,40 @@ defmodule GenRegex.Interpreter do
     }
   end
 
-  def interpret({:choice, choice}) do
-    interpret(choice)
-  end
+  def interpret({:choice, choice}),
+    do: interpret(choice)
 
-  def interpret({:set, items}), do: do_interpret_set(:set, items)
+  def interpret({:set, items}),
+    do: do_interpret_set(:set, items)
 
-  def interpret({:negset, items}) do
-    case do_interpret_set(:negset, items) do
-      %{type: :wildcard} ->
-        %Generator{
-          min: 0,
-          max: 0,
-          type: nil,
-          value: nil
-        }
-      negset ->
-        negset
-    end
-  end
+  def interpret({:negset, items}),
+    do: do_interpret_set(:negset, items)
 
-  defp do_interpret_set(type, items) do
-    if {:wildcard, :.} in items do
-      %Generator{
-        type: :wildcard
-      }
-    else
-      result =
-        items
-        |> Enum.uniq()
-        |> Enum.map(&interpret/1)
+  def interpret({:wildcard, :.}),
+    do: %Generator{
+      type: :wildcard,
+      value: nil
+    }
 
-      %Generator{
-        type: type,
-        value: result
-      }
-    end
-  end
 
   def interpret({:atom, val}), do: to_string(val)
 
-  def interpret({:escape, val}) do
-    "ESC"
+  def interpret({:repexpr, [expr, min, max]}) do
+    [result] =
+      expr
+      |> List.wrap()
+      |> Enum.map(&(
+        case &1 do
+          {:atom, val} ->
+            interpret({:word, [{:atom, val}]})
+          val -> val
+        end)
+      )
+      |> interpret()
+
+    result
+    |> Map.put(:min, min)
+    |> Map.put(:max, max)
   end
 
   def interpret(ast) do
@@ -78,5 +71,23 @@ defmodule GenRegex.Interpreter do
       |> Enum.map(&interpret/1)
 
     result
+  end
+
+  defp do_interpret_set(type, items) do
+    result =
+      items
+      |> Enum.uniq()
+      |> Enum.map(&interpret/1)
+      |> Enum.map(fn item ->
+        case item do
+          %Generator{type: :wildcard} -> :wildcard
+          item -> item
+        end
+      end)
+
+    %Generator{
+      type: type,
+      value: result
+    }
   end
 end

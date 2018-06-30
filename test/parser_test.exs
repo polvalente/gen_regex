@@ -310,4 +310,65 @@ defmodule GenRegex.ParserTest do
       ]
     ]
   end
+
+  test "Should parse a{0456} as repexpr ('04564','0456')" do
+    ast = parse(~r/a{0456}/)
+    assert ast == [
+      repexpr: [
+        [word: [
+          atom: 'a']],
+        [word: [
+          atom: '0',
+          atom: '4',
+          atom: '5',
+          atom: '6']
+        ],
+        [word: [
+          atom: '0',
+          atom: '4',
+          atom: '5',
+          atom: '6']
+        ]
+      ]
+    ]
+  end
+
+  test "Should parse a{4,} as repexpr (4, nil)" do
+    ast = parse(~r/a{0456,}/)
+    assert ast == [
+      repexpr: [
+        [word: [
+          atom: 'a']],
+        [word: [
+          atom: '0',
+          atom: '4',
+          atom: '5',
+          atom: '6']
+        ],
+        nil
+      ]
+    ]
+  end
+
+  test "Should parse a{0123,0456} as repexpr (0123,0456)" do
+    ast = parse(~r/a{0123, 0456}/)
+    assert ast == [
+      repexpr: [
+        [word: [
+          atom: 'a']],
+        [word: [
+          atom: '0',
+          atom: '1',
+          atom: '2',
+          atom: '3']
+        ],
+        [word: [
+          atom: '0',
+          atom: '4',
+          atom: '5',
+          atom: '6']
+        ]
+      ]
+    ]
+  end
 end

@@ -1,6 +1,6 @@
 -module(parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("lib/grammar/parser.yrl", 73).
+-file("lib/grammar/parser.yrl", 82).
 extract_token({_Token, _Line, Value}) -> Value.
 
 -file("/usr/lib/erlang/lib/parsetools-2.1.6/include/yeccpre.hrl", 0).
@@ -255,25 +255,39 @@ yeccpars2(36=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_36(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(37=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_37(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(38=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_38(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(39=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_39(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(40=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_40(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(41=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_41(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(42=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_42(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(43=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_43(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(44=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_44(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
  erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
+yeccpars2_0(S, '', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
+yeccpars2_0(S, '(', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
+yeccpars2_0(S, '.', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
+yeccpars2_0(S, '[', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(S, atom, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 15, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_cont_0(S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_0/7}).
-yeccpars2_cont_0(S, '', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_cont_0(S, '(', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_cont_0(S, '-', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
-yeccpars2_cont_0(S, '.', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
-yeccpars2_cont_0(S, '[', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
 yeccpars2_cont_0(S, escape, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 16, Ss, Stack, T, Ts, Tzr);
 yeccpars2_cont_0(_, _, _, _, T, _, _) ->
@@ -286,6 +300,8 @@ yeccpars2_1(S, '+', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 36, Ss, Stack, T, Ts, Tzr);
 yeccpars2_1(S, '?', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 37, Ss, Stack, T, Ts, Tzr);
+yeccpars2_1(S, '{', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 38, Ss, Stack, T, Ts, Tzr);
 yeccpars2_1(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
@@ -382,7 +398,7 @@ yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 
 yeccpars2_10(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_10_(Stack),
- yeccgoto_chr(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+ yeccgoto_word(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 %% yeccpars2_11: see yeccpars2_0
 
@@ -394,6 +410,14 @@ yeccpars2_13(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_13_(Stack),
  yeccgoto_elem(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
+yeccpars2_14(S, '', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
+yeccpars2_14(S, '(', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
+yeccpars2_14(S, '.', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
+yeccpars2_14(S, '[', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
 yeccpars2_14(S, ']', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 22, Ss, Stack, T, Ts, Tzr);
 yeccpars2_14(S, atom, Ss, Stack, T, Ts, Tzr) ->
@@ -564,6 +588,50 @@ yeccpars2_37(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_37_(Stack),
  yeccgoto_repexpr(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
+yeccpars2_38(S, atom, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 15, Ss, Stack, T, Ts, Tzr);
+yeccpars2_38(S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_cont_0(S, Cat, Ss, Stack, T, Ts, Tzr).
+
+yeccpars2_39(S, ',', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 42, Ss, Stack, T, Ts, Tzr);
+yeccpars2_39(S, atom, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 15, Ss, Stack, T, Ts, Tzr);
+yeccpars2_39(S, '}', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 43, Ss, Stack, T, Ts, Tzr);
+yeccpars2_39(S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_cont_0(S, Cat, Ss, Stack, T, Ts, Tzr).
+
+yeccpars2_40(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccgoto_non_empty_word(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+
+yeccpars2_41(S, '-', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
+yeccpars2_41(S, atom, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 15, Ss, Stack, T, Ts, Tzr);
+yeccpars2_41(S, escape, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 16, Ss, Stack, T, Ts, Tzr);
+yeccpars2_41(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_|Nss] = Ss,
+ NewStack = yeccpars2_41_(Stack),
+ yeccgoto_non_empty_word(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccpars2_42/7}).
+yeccpars2_42(S, '}', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 44, Ss, Stack, T, Ts, Tzr);
+yeccpars2_42(_, _, _, _, T, _, _) ->
+ yeccerror(T).
+
+yeccpars2_43(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_,_|Nss] = Ss,
+ NewStack = yeccpars2_43_(Stack),
+ yeccgoto_repexpr(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+yeccpars2_44(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_,_,_|Nss] = Ss,
+ NewStack = yeccpars2_44_(Stack),
+ yeccgoto_repexpr(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
 -dialyzer({nowarn_function, yeccgoto_chr/7}).
 yeccgoto_chr(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr);
@@ -582,7 +650,13 @@ yeccgoto_chr(19=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_chr(28=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_chr(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr).
+ yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_chr(38=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_40(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_chr(39=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_40(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_chr(41=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_40(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_elem/7}).
 yeccgoto_elem(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -617,6 +691,14 @@ yeccgoto_exprs(11, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_30(30, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_exprs(31, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_30(30, Cat, Ss, Stack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccgoto_non_empty_word/7}).
+yeccgoto_non_empty_word(38, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_39(39, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_non_empty_word(39, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_41(41, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_non_empty_word(41, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_41(41, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_opt_exprs/7}).
 yeccgoto_opt_exprs(11, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -719,7 +801,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr).
 
 -compile({inline,'yeccpars2_2_\'$end\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\'$end\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -727,7 +809,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,'yeccpars2_2_\'(\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\'(\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -735,7 +817,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,'yeccpars2_2_\')\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\')\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -743,7 +825,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,'yeccpars2_2_\'.\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\'.\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -751,7 +833,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,'yeccpars2_2_\'[\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\'[\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -759,7 +841,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,'yeccpars2_2_\'|\''/1}).
--file("lib/grammar/parser.yrl", 31).
+-file("lib/grammar/parser.yrl", 35).
 'yeccpars2_2_\'|\''(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -767,7 +849,7 @@ yeccgoto_wrd_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_2_/1}).
--file("lib/grammar/parser.yrl", 63).
+-file("lib/grammar/parser.yrl", 70).
 yeccpars2_2_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -775,7 +857,7 @@ yeccpars2_2_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_3_/1}).
--file("lib/grammar/parser.yrl", 35).
+-file("lib/grammar/parser.yrl", 39).
 yeccpars2_3_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -783,7 +865,7 @@ yeccpars2_3_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_4_/1}).
--file("lib/grammar/parser.yrl", 37).
+-file("lib/grammar/parser.yrl", 41).
 yeccpars2_4_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -791,7 +873,7 @@ yeccpars2_4_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_5_/1}).
--file("lib/grammar/parser.yrl", 36).
+-file("lib/grammar/parser.yrl", 40).
 yeccpars2_5_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -799,15 +881,15 @@ yeccpars2_5_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_10_/1}).
--file("lib/grammar/parser.yrl", 53).
+-file("lib/grammar/parser.yrl", 61).
 yeccpars2_10_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   [ { atom , '' } ]
+   [ ]
   end | __Stack].
 
 -compile({inline,yeccpars2_12_/1}).
--file("lib/grammar/parser.yrl", 54).
+-file("lib/grammar/parser.yrl", 57).
 yeccpars2_12_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -815,7 +897,7 @@ yeccpars2_12_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_13_/1}).
--file("lib/grammar/parser.yrl", 38).
+-file("lib/grammar/parser.yrl", 42).
 yeccpars2_13_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -823,7 +905,7 @@ yeccpars2_13_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_15_/1}).
--file("lib/grammar/parser.yrl", 55).
+-file("lib/grammar/parser.yrl", 58).
 yeccpars2_15_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -831,7 +913,7 @@ yeccpars2_15_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_16_/1}).
--file("lib/grammar/parser.yrl", 56).
+-file("lib/grammar/parser.yrl", 59).
 yeccpars2_16_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -839,7 +921,7 @@ yeccpars2_16_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_17_/1}).
--file("lib/grammar/parser.yrl", 63).
+-file("lib/grammar/parser.yrl", 70).
 yeccpars2_17_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -847,7 +929,7 @@ yeccpars2_17_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_20_/1}).
--file("lib/grammar/parser.yrl", 44).
+-file("lib/grammar/parser.yrl", 48).
 yeccpars2_20_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -855,7 +937,7 @@ yeccpars2_20_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_22_/1}).
--file("lib/grammar/parser.yrl", 40).
+-file("lib/grammar/parser.yrl", 44).
 yeccpars2_22_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -863,7 +945,7 @@ yeccpars2_22_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_23_/1}).
--file("lib/grammar/parser.yrl", 55).
+-file("lib/grammar/parser.yrl", 58).
 yeccpars2_23_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -871,7 +953,7 @@ yeccpars2_23_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_25_/1}).
--file("lib/grammar/parser.yrl", 61).
+-file("lib/grammar/parser.yrl", 68).
 yeccpars2_25_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -879,7 +961,7 @@ yeccpars2_25_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_26_/1}).
--file("lib/grammar/parser.yrl", 47).
+-file("lib/grammar/parser.yrl", 51).
 yeccpars2_26_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -887,7 +969,7 @@ yeccpars2_26_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_27_/1}).
--file("lib/grammar/parser.yrl", 41).
+-file("lib/grammar/parser.yrl", 45).
 yeccpars2_27_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -895,7 +977,7 @@ yeccpars2_27_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_28_/1}).
--file("lib/grammar/parser.yrl", 59).
+-file("lib/grammar/parser.yrl", 63).
 yeccpars2_28_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -903,7 +985,7 @@ yeccpars2_28_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_30_/1}).
--file("lib/grammar/parser.yrl", 50).
+-file("lib/grammar/parser.yrl", 54).
 yeccpars2_30_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -911,7 +993,7 @@ yeccpars2_30_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_32_/1}).
--file("lib/grammar/parser.yrl", 51).
+-file("lib/grammar/parser.yrl", 55).
 yeccpars2_32_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -919,7 +1001,7 @@ yeccpars2_32_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_33_/1}).
--file("lib/grammar/parser.yrl", 49).
+-file("lib/grammar/parser.yrl", 53).
 yeccpars2_33_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -927,7 +1009,7 @@ yeccpars2_33_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_34_/1}).
--file("lib/grammar/parser.yrl", 33).
+-file("lib/grammar/parser.yrl", 37).
 yeccpars2_34_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -935,7 +1017,7 @@ yeccpars2_34_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_35_/1}).
--file("lib/grammar/parser.yrl", 65).
+-file("lib/grammar/parser.yrl", 72).
 yeccpars2_35_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -943,7 +1025,7 @@ yeccpars2_35_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_36_/1}).
--file("lib/grammar/parser.yrl", 66).
+-file("lib/grammar/parser.yrl", 73).
 yeccpars2_36_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -951,12 +1033,36 @@ yeccpars2_36_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_37_/1}).
--file("lib/grammar/parser.yrl", 67).
+-file("lib/grammar/parser.yrl", 74).
 yeccpars2_37_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
    { repexpr , [ __1 , 0 , 1 ] }
   end | __Stack].
 
+-compile({inline,yeccpars2_41_/1}).
+-file("lib/grammar/parser.yrl", 66).
+yeccpars2_41_(__Stack0) ->
+ [__2,__1 | __Stack] = __Stack0,
+ [begin
+   __1 ++ __2
+  end | __Stack].
 
+-compile({inline,yeccpars2_43_/1}).
 -file("lib/grammar/parser.yrl", 75).
+yeccpars2_43_(__Stack0) ->
+ [__4,__3,__2,__1 | __Stack] = __Stack0,
+ [begin
+   { repexpr , [ __1 , [ { word , __3 } ] , [ { word , __3 } ] ] }
+  end | __Stack].
+
+-compile({inline,yeccpars2_44_/1}).
+-file("lib/grammar/parser.yrl", 76).
+yeccpars2_44_(__Stack0) ->
+ [__5,__4,__3,__2,__1 | __Stack] = __Stack0,
+ [begin
+   { repexpr , [ __1 , [ { word , __3 } ] , nil ] }
+  end | __Stack].
+
+
+-file("lib/grammar/parser.yrl", 84).

@@ -3,7 +3,6 @@ defmodule GenRegex.LexerTest do
 
   test "Should lex characters as atoms" do
     tokens = GenRegex.lex(~r/aA0!/)
-    [token1, token2, token3, token4] = tokens
     assert tokens == [
       {:atom, 1, 'a'},
       {:atom, 1, 'A'},

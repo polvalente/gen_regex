@@ -11,12 +11,15 @@ set
 chr
 repexpr
 wrd_elem
+non_empty_word
 expr
 exprs.
 
 Terminals 
 '(' 
-')' 
+')'
+'{'
+'}'
 '['
 ']'
 '|' 
@@ -26,6 +29,7 @@ Terminals
 '?'
 '.'
 ''
+','
 escape
 atom.
 
@@ -54,13 +58,16 @@ option -> '(' opt_exprs ')'                 : '$2'.
 opt_exprs -> exprs                          : [{choice, '$1'}].
 opt_exprs -> exprs '|' opt_exprs            : [{choice, '$1'}] ++ '$3'.
 
-chr -> ''                                   : [{atom, ''}].
 chr -> '-'                                  : [{atom, '-'}].
 chr -> atom                                 : [{atom, extract_token('$1')}].
 chr -> escape                               : [{escape, extract_token('$1')}].
 
+word -> ''                                  : [].
 word -> chr                                 : '$1'.
 word -> word word                           : '$1' ++ '$2'.
+
+non_empty_word -> chr                           : '$1'.
+non_empty_word -> non_empty_word non_empty_word : '$1' ++ '$2'.
 
 range -> atom '-' atom                      : {extract_token('$1'), extract_token('$3')}.
 
@@ -69,6 +76,8 @@ wrd_elem -> elem                            : '$1'.
 repexpr -> wrd_elem '*'                     : {repexpr, ['$1', 0, nil]}.
 repexpr -> wrd_elem '+'                     : {repexpr, ['$1', 1, nil]}.
 repexpr -> wrd_elem '?'                     : {repexpr, ['$1', 0, 1]}.
+repexpr -> wrd_elem '{' non_empty_word '}'            : {repexpr, ['$1', [{word, '$3'}], [{word, '$3'}]]}.
+repexpr -> wrd_elem '{' non_empty_word ',''}'         : {repexpr, ['$1', [{word, '$3'}], nil]}.
 
 Erlang code.
 extract_token({_Token, _Line, Value}) -> Value.

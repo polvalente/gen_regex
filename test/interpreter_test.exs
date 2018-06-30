@@ -34,13 +34,21 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [generator([generator("foo"), generator("bar")], :option)]
   end
 
-  #test "Should parse set" do
-  #  genexp = interpret(~r/[foo.]/)
-  #end
+  test "Should interpret set" do
+    genexp = interpret(~r/[foo]/)
+    assert genexp == [generator(["f", "o"], :set)]
 
-  #test "Should parse negset" do
-  #  genexp = interpret(~r/[^foo]/)
-  #end
+    genexp = interpret(~r/[foo.]/)
+    assert genexp == [generator(nil, :wildcard)]
+  end
+
+  test "Should parse negset" do
+    genexp = interpret(~r/[^foo]/)
+    assert genexp == [generator(["f", "o"], :negset)]
+
+    genexp = interpret(~r/[^foo.]/)
+    assert genexp == [generator(nil, nil, 0, 0)]
+  end
 
   #test "Should parse *" do
   #  genexp = interpret(~r/a*/)

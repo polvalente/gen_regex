@@ -32,16 +32,38 @@ defmodule GenRegex.Interpreter do
     interpret(choice)
   end
 
-  def interpret({:set, items}) do
-    result =
-      items
-      |> Enum.uniq()
-      |> Enum.map(&interpret/1)
+  def interpret({:set, items}), do: do_interpret_set(:set, items)
 
-    %Generator{
-      type: :set,
-      value: result
-    }
+  def interpret({:negset, items}) do
+    case do_interpret_set(:negset, items) do
+      %{type: :wildcard} ->
+        %Generator{
+          min: 0,
+          max: 0,
+          type: nil,
+          value: nil
+        }
+      negset ->
+        negset
+    end
+  end
+
+  defp do_interpret_set(type, items) do
+    if {:wildcard, :.} in items do
+      %Generator{
+        type: :wildcard
+      }
+    else
+      result =
+        items
+        |> Enum.uniq()
+        |> Enum.map(&interpret/1)
+
+      %Generator{
+        type: type,
+        value: result
+      }
+    end
   end
 
   def interpret({:atom, val}), do: to_string(val)

@@ -6,7 +6,14 @@ defmodule GenRegex.Interpreter do
 
   alias GenRegex.Generator
 
-  defp interpret({:word, elems}, _parent) do
+  defp interpret({:word, [head | tail] = elems}, parent) do
+    elems =
+      if head == {:atom, :^} and parent == nil do
+        tail
+      else
+        elems
+      end
+
     result =
       elems
       |> Enum.map(&(interpret(&1,:word)))

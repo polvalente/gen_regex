@@ -180,7 +180,11 @@ defmodule GenRegex.InterpreterTest do
   #  genexp = interpret(~r/a{0123, 0456}/)
   #end
 
-  #test "Should parse ^ as atom in word" do
-  #  genexp = interpret(~r/^ab[ab^]/)
-  #end
+  test "Should parse ^ as atom in word" do
+    genexp = interpret(~r/^ab[aabb^abba]/)
+    assert genexp == [
+      generator("ab", :word),
+      generator(["a", "b", "^"], :set)
+    ]
+  end
 end

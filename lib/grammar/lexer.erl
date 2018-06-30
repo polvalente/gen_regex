@@ -12,7 +12,7 @@
 -export([format_error/1]).
 
 %% User code. This is placed here to allow extra attributes.
--file("lib/grammar/lexer.xrl", 23).
+-file("lib/grammar/lexer.xrl", 24).
 
 -file("/usr/lib/erlang/lib/parsetools-2.1.6/include/leexinc.hrl", 14).
 
@@ -306,88 +306,134 @@ adjust_line(T, A, [_|Cs], L) ->
 %% input.
 
 -file("lib/grammar/lexer.erl", 307).
-yystate() -> 13.
+yystate() -> 18.
 
-yystate(16, Ics, Line, Tlen, _, _) ->
-    {11,Tlen,Ics,Line};
-yystate(15, Ics, Line, Tlen, _, _) ->
-    {14,Tlen,Ics,Line};
-yystate(14, Ics, Line, Tlen, _, _) ->
-    {0,Tlen,Ics,Line};
-yystate(13, [125|Ics], Line, Tlen, Action, Alen) ->
-    yystate(9, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [124|Ics], Line, Tlen, Action, Alen) ->
-    yystate(5, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [123|Ics], Line, Tlen, Action, Alen) ->
-    yystate(1, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [93|Ics], Line, Tlen, Action, Alen) ->
-    yystate(2, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [92|Ics], Line, Tlen, Action, Alen) ->
-    yystate(6, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [91|Ics], Line, Tlen, Action, Alen) ->
-    yystate(14, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [63|Ics], Line, Tlen, Action, Alen) ->
+yystate(19, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 14, Tlen);
+yystate(19, Ics, Line, Tlen, _, _) ->
+    {14,Tlen,Ics,Line,19};
+yystate(18, [125|Ics], Line, Tlen, Action, Alen) ->
     yystate(16, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [46|Ics], Line, Tlen, Action, Alen) ->
-    yystate(12, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [45|Ics], Line, Tlen, Action, Alen) ->
+yystate(18, [124|Ics], Line, Tlen, Action, Alen) ->
+    yystate(10, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [123|Ics], Line, Tlen, Action, Alen) ->
     yystate(8, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [44|Ics], Line, Tlen, Action, Alen) ->
+yystate(18, [93|Ics], Line, Tlen, Action, Alen) ->
+    yystate(6, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [92|Ics], Line, Tlen, Action, Alen) ->
     yystate(4, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [43|Ics], Line, Tlen, Action, Alen) ->
-    yystate(0, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [42|Ics], Line, Tlen, Action, Alen) ->
+yystate(18, [91|Ics], Line, Tlen, Action, Alen) ->
+    yystate(1, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [63|Ics], Line, Tlen, Action, Alen) ->
     yystate(3, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [41|Ics], Line, Tlen, Action, Alen) ->
+yystate(18, [46|Ics], Line, Tlen, Action, Alen) ->
+    yystate(5, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [45|Ics], Line, Tlen, Action, Alen) ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [44|Ics], Line, Tlen, Action, Alen) ->
     yystate(7, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [40|Ics], Line, Tlen, Action, Alen) ->
+yystate(18, [43|Ics], Line, Tlen, Action, Alen) ->
     yystate(11, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 0, C =< 9 ->
+yystate(18, [42|Ics], Line, Tlen, Action, Alen) ->
+    yystate(13, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [41|Ics], Line, Tlen, Action, Alen) ->
     yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 11, C =< 39 ->
-    yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 47, C =< 62 ->
-    yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 64, C =< 90 ->
-    yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 94, C =< 122 ->
-    yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, [C|Ics], Line, Tlen, Action, Alen) when C >= 126 ->
-    yystate(15, Ics, Line, Tlen+1, Action, Alen);
-yystate(13, Ics, Line, Tlen, Action, Alen) ->
-    {Action,Alen,Tlen,Ics,Line,13};
+yystate(18, [40|Ics], Line, Tlen, Action, Alen) ->
+    yystate(17, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 0, C =< 9 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 11, C =< 39 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 47, C =< 62 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 64, C =< 90 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 94, C =< 122 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, [C|Ics], Line, Tlen, Action, Alen) when C >= 126 ->
+    yystate(19, Ics, Line, Tlen+1, Action, Alen);
+yystate(18, Ics, Line, Tlen, Action, Alen) ->
+    {Action,Alen,Tlen,Ics,Line,18};
+yystate(17, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 4, Tlen);
+yystate(17, Ics, Line, Tlen, _, _) ->
+    {4,Tlen,Ics,Line,17};
+yystate(16, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 3, Tlen);
+yystate(16, Ics, Line, Tlen, _, _) ->
+    {3,Tlen,Ics,Line,16};
+yystate(15, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 5, Tlen);
+yystate(15, Ics, Line, Tlen, _, _) ->
+    {5,Tlen,Ics,Line,15};
+yystate(14, [C|Ics], Line, Tlen, Action, Alen) when C >= 0, C =< 9 ->
+    yystate(12, Ics, Line, Tlen+1, Action, Alen);
+yystate(14, [C|Ics], Line, Tlen, Action, Alen) when C >= 11 ->
+    yystate(12, Ics, Line, Tlen+1, Action, Alen);
+yystate(14, Ics, Line, Tlen, Action, Alen) ->
+    {Action,Alen,Tlen,Ics,Line,14};
+yystate(13, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 7, Tlen);
+yystate(13, Ics, Line, Tlen, _, _) ->
+    {7,Tlen,Ics,Line,13};
 yystate(12, Ics, Line, Tlen, _, _) ->
-    {10,Tlen,Ics,Line};
-yystate(11, Ics, Line, Tlen, _, _) ->
-    {4,Tlen,Ics,Line};
-yystate(10, Ics, Line, Tlen, _, _) ->
     {12,Tlen,Ics,Line};
+yystate(11, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 8, Tlen);
+yystate(11, Ics, Line, Tlen, _, _) ->
+    {8,Tlen,Ics,Line,11};
+yystate(10, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 6, Tlen);
+yystate(10, Ics, Line, Tlen, _, _) ->
+    {6,Tlen,Ics,Line,10};
+yystate(9, [32|Ics], Line, Tlen, _, _) ->
+    yystate(9, Ics, Line, Tlen+1, 13, Tlen);
 yystate(9, Ics, Line, Tlen, _, _) ->
-    {3,Tlen,Ics,Line};
+    {13,Tlen,Ics,Line,9};
+yystate(8, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 2, Tlen);
 yystate(8, Ics, Line, Tlen, _, _) ->
-    {9,Tlen,Ics,Line};
+    {2,Tlen,Ics,Line,8};
+yystate(7, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 13, Tlen);
+yystate(7, [32|Ics], Line, Tlen, _, _) ->
+    yystate(9, Ics, Line, Tlen+1, 13, Tlen);
 yystate(7, Ics, Line, Tlen, _, _) ->
-    {5,Tlen,Ics,Line};
-yystate(6, [C|Ics], Line, Tlen, _, _) when C >= 0, C =< 9 ->
-    yystate(10, Ics, Line, Tlen+1, 14, Tlen);
-yystate(6, [C|Ics], Line, Tlen, _, _) when C >= 11 ->
-    yystate(10, Ics, Line, Tlen+1, 14, Tlen);
+    {13,Tlen,Ics,Line,7};
+yystate(6, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 1, Tlen);
 yystate(6, Ics, Line, Tlen, _, _) ->
-    {14,Tlen,Ics,Line,6};
+    {1,Tlen,Ics,Line,6};
+yystate(5, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 9, Tlen);
 yystate(5, Ics, Line, Tlen, _, _) ->
-    {6,Tlen,Ics,Line};
-yystate(4, [32|Ics], Line, Tlen, _, _) ->
-    yystate(4, Ics, Line, Tlen+1, 13, Tlen);
+    {9,Tlen,Ics,Line,5};
+yystate(4, [45|Ics], Line, Tlen, _, _) ->
+    yystate(2, Ics, Line, Tlen+1, 14, Tlen);
+yystate(4, [C|Ics], Line, Tlen, _, _) when C >= 0, C =< 9 ->
+    yystate(0, Ics, Line, Tlen+1, 14, Tlen);
+yystate(4, [C|Ics], Line, Tlen, _, _) when C >= 11, C =< 44 ->
+    yystate(0, Ics, Line, Tlen+1, 14, Tlen);
+yystate(4, [C|Ics], Line, Tlen, _, _) when C >= 46 ->
+    yystate(0, Ics, Line, Tlen+1, 14, Tlen);
 yystate(4, Ics, Line, Tlen, _, _) ->
-    {13,Tlen,Ics,Line,4};
+    {14,Tlen,Ics,Line,4};
+yystate(3, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 10, Tlen);
 yystate(3, Ics, Line, Tlen, _, _) ->
-    {7,Tlen,Ics,Line};
+    {10,Tlen,Ics,Line,3};
+yystate(2, [C|Ics], Line, Tlen, _, _) when C >= 0, C =< 9 ->
+    yystate(12, Ics, Line, Tlen+1, 11, Tlen);
+yystate(2, [C|Ics], Line, Tlen, _, _) when C >= 11 ->
+    yystate(12, Ics, Line, Tlen+1, 11, Tlen);
 yystate(2, Ics, Line, Tlen, _, _) ->
-    {1,Tlen,Ics,Line};
+    {11,Tlen,Ics,Line,2};
+yystate(1, [45|Ics], Line, Tlen, _, _) ->
+    yystate(14, Ics, Line, Tlen+1, 0, Tlen);
 yystate(1, Ics, Line, Tlen, _, _) ->
-    {2,Tlen,Ics,Line};
+    {0,Tlen,Ics,Line,1};
 yystate(0, Ics, Line, Tlen, _, _) ->
-    {8,Tlen,Ics,Line};
+    {11,Tlen,Ics,Line};
 yystate(S, Ics, Line, Tlen, Action, Alen) ->
     {Action,Alen,Tlen,Ics,Line,S}.
 
@@ -417,8 +463,9 @@ yyaction(9, _, _, TokenLine) ->
     yyaction_9(TokenLine);
 yyaction(10, _, _, TokenLine) ->
     yyaction_10(TokenLine);
-yyaction(11, _, _, TokenLine) ->
-    yyaction_11(TokenLine);
+yyaction(11, TokenLen, YYtcs, TokenLine) ->
+    TokenChars = yypre(YYtcs, TokenLen),
+    yyaction_11(TokenChars, TokenLine);
 yyaction(12, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
     yyaction_12(TokenChars, TokenLine);
@@ -431,77 +478,77 @@ yyaction(14, TokenLen, YYtcs, TokenLine) ->
 yyaction(_, _, _, _) -> error.
 
 -compile({inline,yyaction_0/1}).
--file("lib/grammar/lexer.xrl", 5).
+-file("lib/grammar/lexer.xrl", 6).
 yyaction_0(TokenLine) ->
      { token, { '[', TokenLine } } .
 
 -compile({inline,yyaction_1/1}).
--file("lib/grammar/lexer.xrl", 6).
+-file("lib/grammar/lexer.xrl", 7).
 yyaction_1(TokenLine) ->
      { token, { ']', TokenLine } } .
 
 -compile({inline,yyaction_2/1}).
--file("lib/grammar/lexer.xrl", 7).
+-file("lib/grammar/lexer.xrl", 8).
 yyaction_2(TokenLine) ->
      { token, { '{', TokenLine } } .
 
 -compile({inline,yyaction_3/1}).
--file("lib/grammar/lexer.xrl", 8).
+-file("lib/grammar/lexer.xrl", 9).
 yyaction_3(TokenLine) ->
      { token, { '}', TokenLine } } .
 
 -compile({inline,yyaction_4/1}).
--file("lib/grammar/lexer.xrl", 9).
+-file("lib/grammar/lexer.xrl", 10).
 yyaction_4(TokenLine) ->
      { token, { '(', TokenLine } } .
 
 -compile({inline,yyaction_5/1}).
--file("lib/grammar/lexer.xrl", 10).
+-file("lib/grammar/lexer.xrl", 11).
 yyaction_5(TokenLine) ->
      { token, { ')', TokenLine } } .
 
 -compile({inline,yyaction_6/1}).
--file("lib/grammar/lexer.xrl", 11).
+-file("lib/grammar/lexer.xrl", 12).
 yyaction_6(TokenLine) ->
      { token, { '|', TokenLine } } .
 
 -compile({inline,yyaction_7/1}).
--file("lib/grammar/lexer.xrl", 12).
+-file("lib/grammar/lexer.xrl", 13).
 yyaction_7(TokenLine) ->
      { token, { '*', TokenLine } } .
 
 -compile({inline,yyaction_8/1}).
--file("lib/grammar/lexer.xrl", 13).
+-file("lib/grammar/lexer.xrl", 14).
 yyaction_8(TokenLine) ->
      { token, { '+', TokenLine } } .
 
 -compile({inline,yyaction_9/1}).
--file("lib/grammar/lexer.xrl", 14).
-yyaction_9(TokenLine) ->
-     { token, { '-', TokenLine } } .
-
--compile({inline,yyaction_10/1}).
 -file("lib/grammar/lexer.xrl", 15).
-yyaction_10(TokenLine) ->
+yyaction_9(TokenLine) ->
      { token, { '.', TokenLine } } .
 
--compile({inline,yyaction_11/1}).
+-compile({inline,yyaction_10/1}).
 -file("lib/grammar/lexer.xrl", 16).
-yyaction_11(TokenLine) ->
+yyaction_10(TokenLine) ->
      { token, { '?', TokenLine } } .
 
--compile({inline,yyaction_12/2}).
+-compile({inline,yyaction_11/2}).
 -file("lib/grammar/lexer.xrl", 17).
-yyaction_12(TokenChars, TokenLine) ->
+yyaction_11(TokenChars, TokenLine) ->
      { token, { escape, TokenLine, TokenChars } } .
 
--compile({inline,yyaction_13/2}).
+-compile({inline,yyaction_12/2}).
 -file("lib/grammar/lexer.xrl", 18).
+yyaction_12(TokenChars, TokenLine) ->
+     { token, { range, TokenLine, TokenChars } } .
+
+-compile({inline,yyaction_13/2}).
+-file("lib/grammar/lexer.xrl", 19).
 yyaction_13(TokenChars, TokenLine) ->
      { token, { comma, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_14/2}).
--file("lib/grammar/lexer.xrl", 19).
+-file("lib/grammar/lexer.xrl", 20).
 yyaction_14(TokenChars, TokenLine) ->
      { token, { atom, TokenLine, TokenChars } } .
 

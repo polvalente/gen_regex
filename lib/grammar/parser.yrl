@@ -1,5 +1,4 @@
 Nonterminals 
-range
 word 
 option
 opt_exprs 
@@ -28,6 +27,7 @@ Terminals
 '?'
 '.'
 ''
+range
 comma
 escape
 atom.
@@ -47,8 +47,8 @@ elem -> '.'                                                             : [{wild
 set -> '[' ']'                                                          : [].
 set -> '[' set_elems ']'                                                : '$2'.
 
+set_elem  -> range                                                      : [{range, extract_token('$1')}].
 set_elem  -> elem                                                       : '$1'.
-set_elem  -> range                                                      : [{range, '$1'}].
 set_elem  -> word                                                       : '$1'.
 set_elems -> set_elem                                                   : '$1'.
 set_elems -> set_elem set_elems                                         : '$1' ++ '$2'.
@@ -68,8 +68,6 @@ word -> word word                                                       : '$1' +
 
 nemptywrd -> chr                                                        : '$1'.
 nemptywrd -> nemptywrd nemptywrd                                        : '$1' ++ '$2'.
-
-range -> atom '-' atom                                                  : {extract_token('$1'), extract_token('$3')}.
 
 wrd_elem -> word                                                        : [{word, '$1'}].
 wrd_elem -> elem                                                        : '$1'.

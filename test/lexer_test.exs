@@ -55,12 +55,10 @@ defmodule GenRegex.LexerTest do
     ]
   end
 
-  test "Should lex - as special token" do
+  test "Should lex - as range token" do
     tokens = GenRegex.lex(~r/a-z/)
     assert tokens == [
-      {:atom, 1, 'a'},
-      {:'-', 1},
-      {:atom, 1, 'z'}
+      {:range, 1, 'a-z'}
     ]
   end
 

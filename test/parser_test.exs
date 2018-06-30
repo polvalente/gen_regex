@@ -10,19 +10,22 @@ defmodule GenRegex.ParserTest do
   end
 
   test "Should parse word (with atoms, range, escape)" do
-    ast = parse(~r/aA0!@¨\w[0-9]/)
+    ast = parse(~r/aA0,!@¨\w[,0-9,]/)
     assert ast == [
       word: [
         atom: 'a',
         atom: 'A',
         atom: '0',
+        atom: ',',
         atom: '!',
         atom: '@',
         atom: [168],
         escape: '\\w',
       ],
       set: [
-        range: {'0', '9'}
+        atom: ',',
+        range: '0-9',
+        atom: ',',
       ]
     ]
   end
@@ -299,9 +302,9 @@ defmodule GenRegex.ParserTest do
           ],
           repexpr: [
             [set: [
-              range: {'a','z'},
-              range: {'A','Z'},
-              range: {'0','9'}
+              range: 'a-z',
+              range: 'A-Z',
+              range: '0-9'
             ]],
             1,
             nil

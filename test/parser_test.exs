@@ -334,8 +334,9 @@ defmodule GenRegex.ParserTest do
   end
 
   test "Should parse a{4,} as repexpr (4, nil)" do
-    ast = parse(~r/a{0456,}/)
-    assert ast == [
+    ast1 = parse(~r/a{0456,}/)
+    ast2 = parse(~r/a{0456,   }/)
+    expected_ast = [
       repexpr: [
         [word: [
           atom: 'a']],
@@ -348,6 +349,9 @@ defmodule GenRegex.ParserTest do
         nil
       ]
     ]
+
+    assert ast1 == expected_ast
+    assert ast2 == expected_ast
   end
 
   test "Should parse a{0123,0456} as repexpr (0123,0456)" do

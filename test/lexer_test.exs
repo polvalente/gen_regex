@@ -90,7 +90,7 @@ defmodule GenRegex.LexerTest do
     tokens = GenRegex.lex(~r/a,b/)
     assert tokens == [
       {:atom, 1, 'a'},
-      {:',', 1},
+      {:comma, 1, ','},
       {:atom, 1, 'b'}
     ]
   end

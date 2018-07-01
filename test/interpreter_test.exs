@@ -1,14 +1,17 @@
 defmodule GenRegex.InterpreterTest do
   use ExUnit.Case
 
-  alias GenRegex.Generator
+  alias GenRegex.{
+    Generator,
+    Interpreter
+  }
 
   defmacro interpret(regex) do
     quote do
       unquote(regex)
       |> GenRegex.lex()
       |> GenRegex.parse()
-      |> GenRegex.Interpreter.interpret()
+      |> Interpreter.interpret()
     end
   end
 
@@ -31,9 +34,7 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [generator([generator("foo", :word)], :option)]
 
     genexp = interpret(~r/(foo|bar)/)
-    assert genexp == [generator([
-      generator("foo", :word),
-      generator("bar", :word)], :option)]
+    assert genexp == [generator([generator("foo", :word), generator("bar", :word)], :option)]
   end
 
   test "Should interpret set" do
@@ -76,23 +77,30 @@ defmodule GenRegex.InterpreterTest do
     genexp = interpret(~r/(first|last)_name/)
 
     assert genexp == [
-      generator([
-        generator("first", :word),
-        generator("last", :word)
-      ], :option),
-      generator("_name", :word)
-    ]
+             generator(
+               [
+                 generator("first", :word),
+                 generator("last", :word)
+               ],
+               :option
+             ),
+             generator("_name", :word)
+           ]
   end
 
   test "Should parse word+option" do
     genexp = interpret(~r/foo_(bar|baz)/)
+
     assert genexp == [
-      generator("foo_", :word),
-      generator([
-        generator("bar", :word),
-        generator("baz", :word)
-      ], :option)
-    ]
+             generator("foo_", :word),
+             generator(
+               [
+                 generator("bar", :word),
+                 generator("baz", :word)
+               ],
+               :option
+             )
+           ]
   end
 
   test "Should parse []*" do
@@ -112,79 +120,126 @@ defmodule GenRegex.InterpreterTest do
 
   test "Should parse ()*" do
     genexp = interpret(~r/(abc|def)*/)
+
     assert genexp == [
-      generator([
-        generator("abc", :word),
-        generator("def", :word)
-      ], :option, 0, nil)
-    ]
+             generator(
+               [
+                 generator("abc", :word),
+                 generator("def", :word)
+               ],
+               :option,
+               0,
+               nil
+             )
+           ]
   end
 
   test "Should parse ()+" do
     genexp = interpret(~r/(abc|def)+/)
+
     assert genexp == [
-      generator([
-        generator("abc", :word),
-        generator("def", :word)
-      ], :option, 1, nil)
-    ]
+             generator(
+               [
+                 generator("abc", :word),
+                 generator("def", :word)
+               ],
+               :option,
+               1,
+               nil
+             )
+           ]
   end
 
   test "Should parse ()?" do
     genexp = interpret(~r/(abc|def)?/)
+
     assert genexp == [
-      generator([
-        generator("abc", :word),
-        generator("def", :word)
-      ], :option, 0, 1)
-    ]
+             generator(
+               [
+                 generator("abc", :word),
+                 generator("def", :word)
+               ],
+               :option,
+               0,
+               1
+             )
+           ]
   end
 
   test "Should parse ([a-zA-Z0-9]+) correctly (set of ranges +)" do
     genexp = interpret(~r/[a-zA-Z0-9]+/)
+
     assert genexp == [
-      generator([
-        generator(97..122, :range),
-        generator(65..90, :range),
-        generator(48..57, :range),
-      ], :set, 1, nil)
-    ]
+             generator(
+               [
+                 generator(97..122, :range),
+                 generator(65..90, :range),
+                 generator(48..57, :range)
+               ],
+               :set,
+               1,
+               nil
+             )
+           ]
   end
 
   test "Should parse ([^a-zA-Z0-9]+) correctly (negset of ranges +)" do
     genexp = interpret(~r/[^a-zA-Z0-9]+/)
+
     assert genexp == [
-      generator([
-        generator(97..122, :range),
-        generator(65..90, :range),
-        generator(48..57, :range),
-      ], :negset, 1, nil)
-    ]
+             generator(
+               [
+                 generator(97..122, :range),
+                 generator(65..90, :range),
+                 generator(48..57, :range)
+               ],
+               :negset,
+               1,
+               nil
+             )
+           ]
   end
 
-  test "Should parse range as word outside of set" do
+  test "Should interpret range as word outside of set" do
     genexp = interpret(~r/a-zA-Z0-9/)
     assert genexp == [generator("a-zA-Z0-9", :word)]
   end
 
-  #test "Should parse a{0456} as repexpr ('04564','0456')" do
-  #  genexp = interpret(~r/a{0456}/)
-  #end
+  test "Should interpret a{0456} as repexpr (456,456)" do
+    genexp = interpret(~r/a{0456}/)
 
-  #test "Should parse a{4,} as repexpr (4, nil)" do
-  #  genexp1 = interpret(~r/a{0456,}/)
-  #  genexp2 = interpret(~r/a{0456,   }/)
-  #end
+    assert genexp == [
+             generator("a", :word, 456, 456)
+           ]
+  end
 
-  #test "Should parse a{0123,0456} as repexpr (0123,0456)" do
-  #  genexp = interpret(~r/a{0123, 0456}/)
-  #end
+  test "Should interpret a{4,} as repexpr (4, nil)" do
+    genexp1 = interpret(~r/a{0456,}/)
+    genexp2 = interpret(~r/a{0456,   }/)
+
+    assert genexp1 == [
+             generator("a", :word, 456, nil)
+           ]
+
+    assert genexp2 == [
+             generator("a", :word, 456, nil)
+           ]
+  end
+
+  test "Should interpret a{0123,0456} as repexpr (123,456)" do
+    genexp = interpret(~r/a{0123, 0456}/)
+
+    assert genexp == [
+             generator("a", :word, 123, 456)
+           ]
+  end
 
   test "Should parse ^ as atom in word" do
-    genexp = interpret(~r/^ab[aabb^abba]/)
+    genexp = interpret(~r/^ab[^aabb^abba]/)
+
     assert genexp == [
-      generator("ab", :word),
-      generator(["a", "b", "^"], :set)
-    ]
+             generator("ab", :word),
+             generator(["a", "b", "^"], :negset)
+           ]
   end
 end

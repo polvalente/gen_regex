@@ -5,8 +5,8 @@ setup:
 
 precommit:
 	@mix format 
-	@mix credo --strict
 	@git update-index --again
+	@mix credo --strict
 
 test:
 	@mix test --trace

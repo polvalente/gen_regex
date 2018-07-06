@@ -89,6 +89,49 @@ defmodule GenRegex.Interpreter do
     }
   end
 
+  # defp interpret({:escape, seq}, parent) do
+  #  result =
+  #    case seq do
+  #      '\\d' ->
+  #        interpret({:range, "0-9"}, :set)
+
+  #      '\\D' ->
+  #        interpret({:range, "0-9"}, :negset)
+
+  #      '\\h' ->
+  #        interpret(@horizontal_space, :set)
+
+  #      '\\H' ->
+  #        interpret(@horizontal_space, :negset)
+
+  #      '\\s' ->
+  #        %Generator{
+  #          type: :set,
+  #          value: @whitespace
+  #        }
+
+  #      '\\S' ->
+  #        interpret({}, :negset)
+
+  #      '\\w' ->
+  #        [interpret({:range, "a-z"}, :set)]
+
+  #      '\\W' ->
+  #        interpret({"0-9"}, :negset)
+  #    end
+
+  #  case parent do
+  #    :set ->
+  #      result
+
+  #    _ ->
+  #      %Generator{
+  #        type: :set,
+  #        value: result
+  #      }
+  #  end
+  # end
+
   defp interpret(ast, _) when is_number(ast), do: ast
   defp interpret(ast, _) when is_binary(ast), do: ast
   defp interpret(ast, _) when is_nil(ast), do: ast
@@ -111,6 +154,7 @@ defmodule GenRegex.Interpreter do
       |> Enum.map(fn item ->
         case item do
           %Generator{type: :wildcard} -> :wildcard
+          %Generator{type: :set, value: value} -> value
           item -> item
         end
       end)
@@ -145,5 +189,14 @@ defmodule GenRegex.Interpreter do
       |> Integer.parse()
 
     num
+  end
+
+  def horz_space do
+    0..10_000
+    |> Enum.map(fn c ->
+      c
+      |> :binary.encode_unsigned()
+      |> to_string()
+    end)
   end
 end

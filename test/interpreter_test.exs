@@ -234,12 +234,23 @@ defmodule GenRegex.InterpreterTest do
            ]
   end
 
-  test "Should parse ^ as atom in word" do
+  test "Should interpret ^ as atom in word" do
     genexp = interpret(~r/^ab[^aabb^abba]/)
 
     assert genexp == [
              generator("ab", :word),
              generator(["a", "b", "^"], :negset)
            ]
+  end
+
+  test "Should interpret escape sequences" do
+    decimal_expr = interpret(~r/\d/)
+    ndecimal_expr = interpret(~r/\D/)
+    horz_wspc_expr = interpret(~r/\h/)
+    nhorz_wspc_expr = interpret(~r/\H/)
+    wspc_expr = interpret(~r/\s/)
+    nwspc_expr = interpret(~r/\S/)
+    wrd_expr = interpret(~r/\w/)
+    nwrd_expr = interpret(~r/\W/)
   end
 end

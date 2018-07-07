@@ -3,7 +3,7 @@ defmodule GenRegex.MixProject do
 
   def project do
     [
-      app: :regexgen,
+      app: :genregex,
       version: "0.1.0",
       elixir: "~> 1.6",
       erlc_paths: ["lib/grammar"],

@@ -27,7 +27,15 @@ defmodule GenRegex.Generator do
   # ==================
 
   def generate(%Generator{min: nil} = gen, _), do: generate(%Generator{gen | min: 0}, nil)
-  def generate(%Generator{max: nil} = gen, _), do: generate(%Generator{gen | max: @max_reps}, nil)
+  def generate(%Generator{max: nil, min: min} = gen, _) do
+    case @max_reps > min do
+      true ->
+        generate(%Generator{gen | max: @max_reps}, nil)
+      false ->
+        generate(%Generator{gen | max: min+1}, nil)
+    end
+  end
+
   def generate(%Generator{min: min, max: max, type: type} = gen, _)
     when min != 1 and max != 1
   do

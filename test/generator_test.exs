@@ -90,33 +90,32 @@ defmodule GenRegex.GeneratorTest do
     checkgen(~r/a-zA-Z0-9/)
   end
 
-  # property "Should generate from a{0456} as repexpr (456,456)" do
-  #   checkgen(~r/a{0456}/)
-  # end
+  property "Should generate from a{0456} as repexpr (456,456)" do
+    checkgen(~r/a{0456}/)
+  end
 
-  # property "Should generate from a{4,} as repexpr (4, nil)" do
-  #   genexp1 = interpret(~r/a{0456,}/)
-  #   genexp2 = interpret(~r/a{0456,   }/)
-  # end
+  property "Should generate from a{4,} as repexpr (4, nil)" do
+    checkgen(~r/a{0456,}/)
+  end
 
-  # property "Should generate from a{0123,0456} as repexpr (123,456)" do
-  #   checkgen(~r/a{0123, 0456}/)
-  # end
+  property "Should generate from a{0123,0456} as repexpr (123,456)" do
+    checkgen(~r/a{0123,0456}/)
+  end
 
-  # property "Should generate from ^ as atom in word" do
-  #   checkgen(~r/^ab[^aabb^abba]/)
-  # end
+  property "Should generate from ^ as atom in word" do
+    checkgen(~r/^ab[^aabb^abba]/)
+  end
 
-  # property "Should generate from especial escape sequences" do
-  #   digit_expr = interpret(~r/\d/)
-  #   ndigit_expr = interpret(~r/\D/)
-  #   wspc_expr = interpret(~r/\s/)
-  #   nwspc_expr = interpret(~r/\S/)
-  #   wrd_expr = interpret(~r/\w/)
-  #   nwrd_expr = interpret(~r/\W/)
-  # end
+  property "Should generate from especial escape sequences" do
+    checkgen(~r/\d/)
+    checkgen(~r/\D/)
+    checkgen(~r/\s/)
+    checkgen(~r/\S/)
+    checkgen(~r/\w/)
+    checkgen(~r/\W/)
+  end
 
-  # property "Should generate from regular escape sequences" do
-  #   checkgen(~r/\n\r\t\v\f/)
-  # end
+  property "Should generate from regular escape sequences" do
+    checkgen(~r/\n\r\t\v\f/)
+  end
 end

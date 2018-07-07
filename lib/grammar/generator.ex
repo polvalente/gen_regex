@@ -54,7 +54,7 @@ defmodule GenRegex.Generator do
     |> Enum.join("")
   end
 
-  def generate(%Generator{type: :option, value: value} = gen, _parent) do
+  def generate(%Generator{type: :option, value: value}, _parent) do
     value
     |> Enum.random()
     |> generate()
@@ -93,7 +93,7 @@ defmodule GenRegex.Generator do
   end
 
   def generate(:wildcard, :set), do: "."
-  def generate(wildcard, :negset), do: "."
+  def generate(:wildcard, :negset), do: "."
   def generate(%Generator{type: :wildcard}, :set), do: "."
   def generate(%Generator{type: :wildcard}, :negset), do: "."
   def generate(%Generator{type: :wildcard}, _parent) do
@@ -111,7 +111,7 @@ defmodule GenRegex.Generator do
   # PRIVATE FUNCTIONS
   # ==================
 
-  defp gen_reps(acc, generator, parent, count)
+  defp gen_reps(acc, _generator, _parent, count)
     when count <= 0, do: acc
   defp gen_reps(acc, generator, parent, count),
     do: gen_reps(

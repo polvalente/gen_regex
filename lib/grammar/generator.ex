@@ -14,72 +14,81 @@ defmodule GenRegex.Generator do
 
   @max_reps 100
 
-  def generate(list) when is_list(list) do
+  def generate(expr), do: generate(expr, nil)
+
+  def generate(list, parent) when is_list(list) do
     list
-    |> Enum.map(&generate/1)
+    |> Enum.map(&(generate(&1, parent)))
     |> Enum.join("")
   end
+
   # ==================
   # REPETITION CLAUSES
   # ==================
 
-  def generate(%Generator{min: nil} = gen), do: generate(%Generator{gen | min: 0})
-  def generate(%Generator{max: nil} = gen), do: generate(%Generator{gen | max: @max_reps})
-  def generate(%Generator{min: min, max: max} = gen)
+  def generate(%Generator{min: nil} = gen, _), do: generate(%Generator{gen | min: 0}, nil)
+  def generate(%Generator{max: nil} = gen, _), do: generate(%Generator{gen | max: @max_reps}, nil)
+  def generate(%Generator{min: min, max: max, type: type} = gen, _)
     when min != 1 and max != 1
   do
     reps = Enum.random(min..max)
-    gen_reps("", gen, reps)
+    gen_reps("", gen, type, reps)
   end
 
   # ==================
   #  REGULAR CLAUSES
   # ==================
 
-  def generate(%Generator{type: :word} = gen) do
-    gen
-    |> Map.get(:value)
+  def generate(%Generator{type: :word, value: value}, _parent) do
+    value
     |> List.wrap()
-    |> Enum.map(&generate/1)
+    |> Enum.map(&generate(&1, :word))
     |> Enum.join("")
   end
 
-  def generate(%Generator{type: :option} = gen) do
-    gen
-    |> Map.get(:value)
-    |> Enum.random()
-    |> generate()
-  end
-
-  def generate(%Generator{type: :set, value: value}) do
-    value =
-      case Enum.find_index(value, &(&1 == :wildcard)) do
-        nil ->
-          value
-        index ->
-          List.replace_at(value, index, ".")
-      end
-
+  def generate(%Generator{type: :option, value: value} = gen, _parent) do
     value
     |> Enum.random()
     |> generate()
   end
 
-  def generate(%Generator{type: :negset, value: value}) do
-    value =
-      case Enum.find_index(value, &(&1 == :wildcard)) do
-        nil ->
-          value
-        index ->
-          List.replace_at(value, index, ".")
-      end
-      |> Enum.map(&generate/1)
-
-
-    do_generate_negset(value)
+  def generate(%Generator{type: :set, value: value}, _parent) do
+    value
+    |> Enum.random()
+    |> generate(:set)
   end
 
-  def generate(%Generator{type: :wildcard}) do
+  def generate(%Generator{type: :negset, value: value}, _parent) do
+    value =
+      value
+      |> Enum.map(&(generate(&1, :negset)))
+      |> List.flatten()
+
+    GenRegex.RandomString.all()
+    |> String.split("", trim: true)
+    |> :lists.subtract(value)
+    |> Enum.random()
+  end
+
+  def generate(%Generator{type: :range} = gen, :negset), do: generate(gen, :set)
+  def generate(%Generator{type: :range, value: value}, :set) do
+    value
+    |> Enum.to_list()
+    |> Enum.map(&(String.Chars.List.to_string([&1])))
+    |> List.flatten()
+  end
+
+  def generate(%Generator{type: :range, value: value}, _parent) do
+    value
+    |> Enum.take_random(1)
+    |> String.Chars.List.to_string
+  end
+
+  def generate(:wildcard, :set), do: "."
+  def generate(wildcard, :negset), do: "."
+  def generate(%Generator{type: :wildcard}, :set), do: "."
+  def generate(%Generator{type: :wildcard}, :negset), do: "."
+  def generate(%Generator{type: :wildcard}, _parent) do
     GenRegex.RandomString.generate(1)
   end
 
@@ -87,30 +96,20 @@ defmodule GenRegex.Generator do
   # ==================
   #  CATCH-ALL CLAUSE
   # ==================
-  def generate(str), do: to_string(str)
+  def generate(str, _parent), do: to_string(str)
 
 
   # ==================
   # PRIVATE FUNCTIONS
   # ==================
 
-  defp gen_reps(acc, generator, count)
+  defp gen_reps(acc, generator, parent, count)
     when count <= 0, do: acc
-  defp gen_reps(acc, generator, count),
+  defp gen_reps(acc, generator, parent, count),
     do: gen_reps(
-      acc <> generate(%Generator{generator | min: 1, max: 1}),
+      acc <> generate(%Generator{generator | min: 1, max: 1}, parent),
       generator,
+      parent,
       count - 1
       )
-
-  defp do_generate_negset(values) do
-    s = GenRegex.RandomString.generate(1)
-
-    case Enum.member?(values, s) do
-      true ->
-        do_generate_negset(values)
-      false ->
-         s
-    end
-  end
 end

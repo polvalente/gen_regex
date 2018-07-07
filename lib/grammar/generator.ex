@@ -75,17 +75,12 @@ defmodule GenRegex.Generator do
       end
       |> Enum.map(&generate/1)
 
-    :ascii
-    |> StreamData.string()
-    |> Enum.take_while(
-      &(not Enum.member?(value, &1))
-    )
+
+    do_generate_negset(value)
   end
 
   def generate(%Generator{type: :wildcard}) do
-    :ascii
-    |> StreamData.string()
-    |> Enum.take(1)
+    GenRegex.RandomString.generate(1)
   end
 
 
@@ -107,4 +102,15 @@ defmodule GenRegex.Generator do
       generator,
       count - 1
       )
+
+  defp do_generate_negset(values) do
+    s = GenRegex.RandomString.generate(1)
+
+    case Enum.member?(values, s) do
+      true ->
+        do_generate_negset(values)
+      false ->
+         s
+    end
+  end
 end

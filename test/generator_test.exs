@@ -45,35 +45,14 @@ defmodule GenRegex.GeneratorTest do
     checkgen(~r/./)
   end
 
-  # test "Should generate from option+word" do
-  #   genexp = interpret(~r/(first|last)_name/)
+  property "Should generate from option+word" do
+    checkgen(~r/(first|last)_name/)
+  end
 
-  #   assert genexp == [
-  #            generator(
-  #              [
-  #                generator(~w"f i r s t", :word),
-  #                generator(~w"l a s t", :word)
-  #              ],
-  #              :option
-  #            ),
-  #            generator(~w"_ n a m e ", :word)
-  #          ]
-  # end
 
-  # test "Should parse word+option" do
-  #   genexp = interpret(~r/foo_(bar|baz)/)
-
-  #   assert genexp == [
-  #            generator(~w"f o o _", :word),
-  #            generator(
-  #              [
-  #                generator(~w"b a r", :word),
-  #                generator(~w"b a z", :word)
-  #              ],
-  #              :option
-  #            )
-  #          ]
-  # end
+  property "Should generate from word+option" do
+    checkgen(~r/foo_(bar|baz)/)
+  end
 
   # test "Should parse []*" do
   #   genexp = interpret(~r/[abc]*/)

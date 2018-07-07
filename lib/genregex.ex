@@ -14,6 +14,7 @@ defmodule GenRegex do
     |> lex()
     |> parse()
     |> Interpreter.read()
+    |> Generator.generate()
   end
 
   def lex(regexp) do

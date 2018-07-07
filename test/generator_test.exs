@@ -19,13 +19,10 @@ defmodule GenRegex.GeneratorTest do
     checkgen(~r/(foo|bar)/)
   end
 
-  # test "Should generate from set" do
-  #   genexp = interpret(~r/[foo]/)
-  #   assert genexp == [generator(["f", "o"], :set)]
-
-  #   genexp = interpret(~r/[foo.]/)
-  #   assert genexp == [generator(["f", "o", :wildcard], :set)]
-  # end
+  property "Should generate from set" do
+    checkgen(~r/[foo]/)
+    checkgen(~r/[foo.]/)
+  end
 
   # test "Should parse negset" do
   #   genexp = interpret(~r/[^foo]/)

@@ -50,6 +50,19 @@ defmodule GenRegex.Generator do
     |> generate()
   end
 
+  def generate(%Generator{type: :set} = gen) do
+    gen
+    |> Map.get(:value)
+    |> Enum.random()
+    |> generate()
+  end
+
+  def generate(:wildcard) do
+    :ascii
+    |> StreamData.string()
+    |> Enum.take(1)
+  end
+
 
   # ==================
   #  CATCH-ALL CLAUSE

@@ -22,7 +22,8 @@ defmodule GenRegex.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false}
+      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:stream_data, "~> 0.1"}
     ]
   end
 end

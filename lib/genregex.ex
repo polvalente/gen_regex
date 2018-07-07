@@ -7,7 +7,10 @@ defmodule GenRegex do
   Receives a Regex and returns a tokenized version of it
   """
 
-  alias GenRegex.Interpreter
+  alias GenRegex.{
+    Generator,
+    Interpreter
+  }
 
   def generate_from(regexp) do
     regexp
@@ -15,6 +18,7 @@ defmodule GenRegex do
     |> parse()
     |> Interpreter.read()
     |> Generator.generate()
+    |> StreamData.constant()
   end
 
   def lex(regexp) do

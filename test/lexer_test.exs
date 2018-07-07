@@ -95,10 +95,11 @@ defmodule GenRegex.LexerTest do
   end
 
   test "Should lex escape sequence" do
-    tokens = GenRegex.lex(~r/\x/)
+    tokens = GenRegex.lex(~r/\x\n/)
 
     assert tokens == [
-             {:escape, 1, '\\x'}
+             {:escape, 1, '\\x'},
+             {:atom, 1, '\n'}
            ]
   end
 

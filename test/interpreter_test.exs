@@ -243,7 +243,7 @@ defmodule GenRegex.InterpreterTest do
            ]
   end
 
-  test "Should interpret escape sequences" do
+  test "Should interpret especial escape sequences" do
     digit_expr = interpret(~r/\d/)
     ndigit_expr = interpret(~r/\D/)
     wspc_expr = interpret(~r/\s/)
@@ -313,5 +313,13 @@ defmodule GenRegex.InterpreterTest do
       )],
       :word
     )]
+  end
+
+  test "Should interpret regular escape sequences" do
+    genexp = interpret(~r/\n\r\t\v\f/)
+
+    assert genexp == [
+             generator(["\n","\r","\t","\v", "\f"], :word, 1, 1)
+           ]
   end
 end

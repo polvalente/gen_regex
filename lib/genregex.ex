@@ -7,13 +7,13 @@ defmodule GenRegex do
   Receives a Regex and returns a tokenized version of it
   """
 
-  import GenRegex.Interpreter
+  alias GenRegex.Interpreter
 
   def generate_from(regexp) do
     regexp
     |> lex()
     |> parse()
-    |> interpret()
+    |> Interpreter.read()
   end
 
   def lex(regexp) do

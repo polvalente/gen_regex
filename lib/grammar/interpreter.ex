@@ -6,6 +6,8 @@ defmodule GenRegex.Interpreter do
 
   alias GenRegex.Generator
 
+  def read(ast, parent \\ nil), do: interpret(ast, parent)
+
   defp interpret({:word, [head | tail] = elems}, parent) do
     elems =
       if head == {:atom, :^} and parent == nil do
@@ -16,8 +18,15 @@ defmodule GenRegex.Interpreter do
 
     result =
       elems
+      |> List.wrap()
       |> Enum.map(&interpret(&1, :word))
-      |> Enum.join()
+      |> Enum.map(fn item ->
+        case item do
+          %Generator{type: :set, value: value} -> value
+          %Generator{type: :negset, value: value} -> value
+          item -> item
+        end
+      end)
 
     %Generator{
       type: :word,
@@ -39,8 +48,12 @@ defmodule GenRegex.Interpreter do
 
   defp interpret({:choice, choice}, _parent), do: interpret(choice, :choice)
 
+  defp interpret({:set, items}, :word), do: interpret(items, :word)
+  defp interpret({:set, items}, :set), do: interpret(items, :set)
   defp interpret({:set, items}, _parent), do: do_interpret_set(:set, items)
 
+  defp interpret({:negset, items}, :word), do: interpret(items, :word)
+  defp interpret({:negset, items}, :negset), do: interpret(items, :negset)
   defp interpret({:negset, items}, _parent), do: do_interpret_set(:negset, items)
 
   defp interpret({:wildcard, :.}, _parent),
@@ -89,48 +102,21 @@ defmodule GenRegex.Interpreter do
     }
   end
 
-  # defp interpret({:escape, seq}, parent) do
-  #  result =
-  #    case seq do
-  #      '\\d' ->
-  #        interpret({:range, "0-9"}, :set)
+  defp interpret({:escape, _seq} = input, parent) do
+    {set_type, result} = do_escape(input)
 
-  #      '\\D' ->
-  #        interpret({:range, "0-9"}, :negset)
-
-  #      '\\h' ->
-  #        interpret(@horizontal_space, :set)
-
-  #      '\\H' ->
-  #        interpret(@horizontal_space, :negset)
-
-  #      '\\s' ->
-  #        %Generator{
-  #          type: :set,
-  #          value: @whitespace
-  #        }
-
-  #      '\\S' ->
-  #        interpret({}, :negset)
-
-  #      '\\w' ->
-  #        [interpret({:range, "a-z"}, :set)]
-
-  #      '\\W' ->
-  #        interpret({"0-9"}, :negset)
-  #    end
-
-  #  case parent do
-  #    :set ->
-  #      result
-
-  #    _ ->
-  #      %Generator{
-  #        type: :set,
-  #        value: result
-  #      }
-  #  end
-  # end
+    case parent do
+      :set ->
+        result
+      :negset ->
+        result
+      _ ->
+        %Generator{
+          type: set_type,
+          value: result
+        }
+    end
+  end
 
   defp interpret(ast, _) when is_number(ast), do: ast
   defp interpret(ast, _) when is_binary(ast), do: ast
@@ -144,8 +130,6 @@ defmodule GenRegex.Interpreter do
     result
   end
 
-  def interpret(ast), do: interpret(ast, nil)
-
   defp do_interpret_set(type, items) do
     result =
       items
@@ -158,11 +142,76 @@ defmodule GenRegex.Interpreter do
           item -> item
         end
       end)
+      |> List.wrap()
+      |> List.flatten()
 
     %Generator{
       type: type,
       value: result
     }
+  end
+
+  defp do_escape({:escape, '\\d'}) do
+    {:set,
+      %Generator{
+        max: 1,
+        min: 1,
+        type: :set,
+        value: [
+          %Generator{max: 1, min: 1, type: :range, value: 48..57}
+        ]
+      }
+    }
+  end
+
+  defp do_escape({:escape, '\\D'}) do
+    {:set, result} = do_escape({:escape, '\\d'})
+    {:negset, Map.put(result, :type, :negset)}
+  end
+
+  defp do_escape({:escape, '\\w'}) do
+    {:set,
+      %Generator{
+        max: 1,
+        min: 1,
+        type: :set,
+        value: [
+          %Generator{max: 1, min: 1, type: :range, value: 48..57},
+          %Generator{max: 1, min: 1, type: :range, value: 97..122},
+          %Generator{max: 1, min: 1, type: :range, value: 65..90},
+          "_"
+        ]
+      }
+    }
+  end
+
+  defp do_escape({:escape, '\\W'}) do
+    {:set, result} = do_escape({:escape, '\\w'})
+    {:negset, Map.put(result, :type, :negset)}
+  end
+
+  defp do_escape({:escape, '\\s'}) do
+    {:set,
+      %Generator{
+        max: 1,
+        min: 1,
+        type: :set,
+        value: [" ", "\t", "\r", "\n", "\v", "\f"]
+      }
+    }
+  end
+
+  defp do_escape({:escape, '\\S'}) do
+    {:set, result} = do_escape({:escape, '\\s'})
+    {:negset, Map.put(result, :type, :negset)}
+  end
+
+  defp do_escape({:escape, char}) do
+    {
+      :atom,
+      Macro.unescape_string(to_string(char))
+    }
+    |> interpret(:escape)
   end
 
   defp to_integer(nil, _parent), do: nil
@@ -189,14 +238,5 @@ defmodule GenRegex.Interpreter do
       |> Integer.parse()
 
     num
-  end
-
-  def horz_space do
-    0..10_000
-    |> Enum.map(fn c ->
-      c
-      |> :binary.encode_unsigned()
-      |> to_string()
-    end)
   end
 end

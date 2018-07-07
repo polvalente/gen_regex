@@ -11,7 +11,7 @@ defmodule GenRegex.InterpreterTest do
       unquote(regex)
       |> GenRegex.lex()
       |> GenRegex.parse()
-      |> Interpreter.interpret()
+      |> Interpreter.read()
     end
   end
 
@@ -26,15 +26,15 @@ defmodule GenRegex.InterpreterTest do
 
   test "Should interpret word" do
     genexp = interpret(~r/aA0,!@¨/)
-    assert genexp == [generator("aA0,!@¨", :word)]
+    assert genexp == [generator(~w"a A 0 , ! @ ¨", :word)]
   end
 
   test "Should interpret option" do
     genexp = interpret(~r/(foo)/)
-    assert genexp == [generator([generator("foo", :word)], :option)]
+    assert genexp == [generator([generator(~w"f o o", :word)], :option)]
 
     genexp = interpret(~r/(foo|bar)/)
-    assert genexp == [generator([generator("foo", :word), generator("bar", :word)], :option)]
+    assert genexp == [generator([generator(~w"f o o", :word), generator(~w"b a r", :word)], :option)]
   end
 
   test "Should interpret set" do
@@ -55,17 +55,17 @@ defmodule GenRegex.InterpreterTest do
 
   test "Should parse *" do
     genexp = interpret(~r/a*/)
-    assert genexp == [generator("a", :word, 0, nil)]
+    assert genexp == [generator(~w"a", :word, 0, nil)]
   end
 
   test "Should parse +" do
     genexp = interpret(~r/a+/)
-    assert genexp == [generator("a", :word, 1, nil)]
+    assert genexp == [generator(~w"a", :word, 1, nil)]
   end
 
   test "Should parse ?" do
     genexp = interpret(~r/a?/)
-    assert genexp == [generator("a", :word, 0, 1)]
+    assert genexp == [generator(~w"a", :word, 0, 1)]
   end
 
   test "Should parse wildcard" do
@@ -79,12 +79,12 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [
              generator(
                [
-                 generator("first", :word),
-                 generator("last", :word)
+                 generator(~w"f i r s t", :word),
+                 generator(~w"l a s t", :word)
                ],
                :option
              ),
-             generator("_name", :word)
+             generator(~w"_ n a m e ", :word)
            ]
   end
 
@@ -92,11 +92,11 @@ defmodule GenRegex.InterpreterTest do
     genexp = interpret(~r/foo_(bar|baz)/)
 
     assert genexp == [
-             generator("foo_", :word),
+             generator(~w"f o o _", :word),
              generator(
                [
-                 generator("bar", :word),
-                 generator("baz", :word)
+                 generator(~w"b a r", :word),
+                 generator(~w"b a z", :word)
                ],
                :option
              )
@@ -124,8 +124,8 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [
              generator(
                [
-                 generator("abc", :word),
-                 generator("def", :word)
+                 generator(~w"a b c", :word),
+                 generator(~w"d e f", :word)
                ],
                :option,
                0,
@@ -140,8 +140,8 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [
              generator(
                [
-                 generator("abc", :word),
-                 generator("def", :word)
+                 generator(~w"a b c", :word),
+                 generator(~w"d e f", :word)
                ],
                :option,
                1,
@@ -156,8 +156,8 @@ defmodule GenRegex.InterpreterTest do
     assert genexp == [
              generator(
                [
-                 generator("abc", :word),
-                 generator("def", :word)
+                 generator(~w"a b c", :word),
+                 generator(~w"d e f", :word)
                ],
                :option,
                0,
@@ -202,14 +202,14 @@ defmodule GenRegex.InterpreterTest do
 
   test "Should interpret range as word outside of set" do
     genexp = interpret(~r/a-zA-Z0-9/)
-    assert genexp == [generator("a-zA-Z0-9", :word)]
+    assert genexp == [generator(~w"a-z A-Z 0-9", :word)]
   end
 
   test "Should interpret a{0456} as repexpr (456,456)" do
     genexp = interpret(~r/a{0456}/)
 
     assert genexp == [
-             generator("a", :word, 456, 456)
+             generator(~w"a", :word, 456, 456)
            ]
   end
 
@@ -218,11 +218,11 @@ defmodule GenRegex.InterpreterTest do
     genexp2 = interpret(~r/a{0456,   }/)
 
     assert genexp1 == [
-             generator("a", :word, 456, nil)
+             generator(~w"a", :word, 456, nil)
            ]
 
     assert genexp2 == [
-             generator("a", :word, 456, nil)
+             generator(~w"a", :word, 456, nil)
            ]
   end
 
@@ -230,7 +230,7 @@ defmodule GenRegex.InterpreterTest do
     genexp = interpret(~r/a{0123, 0456}/)
 
     assert genexp == [
-             generator("a", :word, 123, 456)
+             generator(~w"a", :word, 123, 456)
            ]
   end
 
@@ -238,19 +238,80 @@ defmodule GenRegex.InterpreterTest do
     genexp = interpret(~r/^ab[^aabb^abba]/)
 
     assert genexp == [
-             generator("ab", :word),
+             generator(~w"a b", :word),
              generator(["a", "b", "^"], :negset)
            ]
   end
 
   test "Should interpret escape sequences" do
-    decimal_expr = interpret(~r/\d/)
-    ndecimal_expr = interpret(~r/\D/)
-    horz_wspc_expr = interpret(~r/\h/)
-    nhorz_wspc_expr = interpret(~r/\H/)
+    digit_expr = interpret(~r/\d/)
+    ndigit_expr = interpret(~r/\D/)
     wspc_expr = interpret(~r/\s/)
     nwspc_expr = interpret(~r/\S/)
     wrd_expr = interpret(~r/\w/)
     nwrd_expr = interpret(~r/\W/)
+
+    assert digit_expr ==
+      [generator([
+        generator([
+          generator(48..57, :range)
+          ],
+          :set
+        )],
+        :word
+      )]
+
+
+    assert ndigit_expr ==
+      [generator([
+        generator([
+          generator(48..57, :range)
+          ],
+          :negset
+        )],
+        :word
+      )]
+
+    assert wspc_expr ==
+    [generator([
+      generator([" ", "\t", "\r", "\n", "\v", "\f"],
+        :set
+      )],
+      :word
+    )]
+
+    assert nwspc_expr ==
+      [generator([
+        generator([" ", "\t", "\r", "\n", "\v", "\f"],
+          :negset
+        )],
+        :word
+      )]
+
+    assert wrd_expr ==
+    [generator([
+      generator([
+        generator(48..57, :range),
+        generator(97..122, :range),
+        generator(65..90, :range),
+        "_"
+      ],
+        :set
+      )],
+      :word
+    )]
+
+    assert nwrd_expr ==
+    [generator([
+      generator([
+        generator(48..57, :range),
+        generator(97..122, :range),
+        generator(65..90, :range),
+        "_"
+      ],
+        :negset
+      )],
+      :word
+    )]
   end
 end

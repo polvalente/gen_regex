@@ -2,6 +2,9 @@ defmodule GenRegex do
   @moduledoc """
   This module parses Regex's and generates strings that pass the spec
 
+  For wildcard characters (.), the generated characters will be a subset of printable ASCII chars
+  For negated character classes ([^...]), the generated characters will be a subset the possible wildcard values.
+
   ## Example
       iex> ~r/(bye|hello|hi), (guys|people|all)(!|\()/
       ...> |> GenRegex.generate_from()

@@ -4,7 +4,7 @@ defmodule GenRegex.GeneratorTest do
 
   defmacro checkgen(regex) do
     quote do
-      check all word <- GenRegex.generate_from(unquote(regex)), max_runs: 25 do
+      check all word <- GenRegex.generate_from(unquote(regex)), max_runs: 20 do
         assert Regex.match?(unquote(regex), word)
       end
     end
@@ -24,33 +24,26 @@ defmodule GenRegex.GeneratorTest do
     checkgen(~r/[foo.]/)
   end
 
-  # test "Should parse negset" do
-  #   genexp = interpret(~r/[^foo]/)
-  #   assert genexp == [generator(["f", "o"], :negset)]
+  property "Should generate from negset" do
+    checkgen(~r/[^foo]/)
+    checkgen(~r/[^foo.]/)
+  end
 
-  #   genexp = interpret(~r/[^foo.]/)
-  #   assert genexp == [generator(["f", "o", :wildcard], :negset)]
-  # end
+  property "Should generate from *" do
+     checkgen(~r/a*/)
+  end
 
-  # test "Should parse *" do
-  #   genexp = interpret(~r/a*/)
-  #   assert genexp == [generator(~w"a", :word, 0, nil)]
-  # end
+  property "Should generate from +" do
+    checkgen(~r/a+/)
+  end
 
-  # test "Should parse +" do
-  #   genexp = interpret(~r/a+/)
-  #   assert genexp == [generator(~w"a", :word, 1, nil)]
-  # end
+  property "Should generate from ?" do
+    checkgen(~r/a?/)
+  end
 
-  # test "Should parse ?" do
-  #   genexp = interpret(~r/a?/)
-  #   assert genexp == [generator(~w"a", :word, 0, 1)]
-  # end
-
-  # test "Should parse wildcard" do
-  #   genexp = interpret(~r/./)
-  #   assert genexp == [generator(nil, :wildcard)]
-  # end
+  property "Should generate from wildcard" do
+    checkgen(~r/./)
+  end
 
   # test "Should generate from option+word" do
   #   genexp = interpret(~r/(first|last)_name/)

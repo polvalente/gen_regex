@@ -28,7 +28,8 @@ defmodule GenRegex.Generator do
   def generate(%Generator{min: min, max: max} = gen)
     when min != 1 and max != 1
   do
-    gen_reps("", gen, Enum.random(min..max))
+    reps = Enum.random(min..max)
+    gen_reps("", gen, reps)
   end
 
   # ==================
@@ -50,14 +51,38 @@ defmodule GenRegex.Generator do
     |> generate()
   end
 
-  def generate(%Generator{type: :set} = gen) do
-    gen
-    |> Map.get(:value)
+  def generate(%Generator{type: :set, value: value}) do
+    value =
+      case Enum.find_index(value, &(&1 == :wildcard)) do
+        nil ->
+          value
+        index ->
+          List.replace_at(value, index, ".")
+      end
+
+    value
     |> Enum.random()
     |> generate()
   end
 
-  def generate(:wildcard) do
+  def generate(%Generator{type: :negset, value: value}) do
+    value =
+      case Enum.find_index(value, &(&1 == :wildcard)) do
+        nil ->
+          value
+        index ->
+          List.replace_at(value, index, ".")
+      end
+      |> Enum.map(&generate/1)
+
+    :ascii
+    |> StreamData.string()
+    |> Enum.take_while(
+      &(not Enum.member?(value, &1))
+    )
+  end
+
+  def generate(%Generator{type: :wildcard}) do
     :ascii
     |> StreamData.string()
     |> Enum.take(1)
@@ -78,7 +103,7 @@ defmodule GenRegex.Generator do
     when count <= 0, do: acc
   defp gen_reps(acc, generator, count),
     do: gen_reps(
-      acc + generate(%Generator{generator | min: 1, max: 1}),
+      acc <> generate(%Generator{generator | min: 1, max: 1}),
       generator,
       count - 1
       )

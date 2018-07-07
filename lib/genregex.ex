@@ -1,10 +1,12 @@
 defmodule GenRegex do
   @moduledoc """
   This module parses Regex's and generates strings that pass the spec
-  """
 
-  @doc """
-  Receives a Regex and returns a tokenized version of it
+  ## Example
+      iex> ~r/(bye|hello|hi), (guys|people|all)(!|\()/
+      ...> |> GenRegex.generate_from()
+      ...> |> Enum.take(3)
+      ["bye, all(", "bye, guys(", "hi, guys("]
   """
 
   alias GenRegex.{
@@ -14,11 +16,16 @@ defmodule GenRegex do
 
   def generate_from(regexp) do
     regexp
+    |> StreamData.constant()
+    |> StreamData.map(&do_generate_from/1)
+  end
+
+  defp do_generate_from(regexp) do
+    regexp
     |> lex()
     |> parse()
     |> Interpreter.read()
     |> Generator.generate()
-    |> StreamData.constant()
   end
 
   def lex(regexp) do

@@ -110,6 +110,8 @@ defmodule GenRegex.Interpreter do
         result
       :negset ->
         result
+      :choice ->
+        result
       _ ->
         %Generator{
           type: set_type,
@@ -207,11 +209,13 @@ defmodule GenRegex.Interpreter do
   end
 
   defp do_escape({:escape, char}) do
-    {
-      :atom,
-      Macro.unescape_string(to_string(char))
+    {:set,
+      {
+        :atom,
+        Macro.unescape_string(to_string(char))
+      }
+      |> interpret(:escape)
     }
-    |> interpret(:escape)
   end
 
   defp to_integer(nil, _parent), do: nil

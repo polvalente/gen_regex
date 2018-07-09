@@ -5,11 +5,10 @@ defmodule GenRegex do
   For wildcard characters (.), the generated characters will be a subset of printable ASCII chars
   For negated character classes ([^...]), the generated characters will be a subset the possible wildcard values.
 
-  ## Example
-      iex> ~r/(bye|hello|hi), (guys|people|all)(!|\()/
-      ...> |> GenRegex.generate_from()
-      ...> |> Enum.take(3)
-      ["bye, all(", "bye, guys(", "hi, guys("]
+  # Example
+    iex> ~r/(bye|hello|hi), (guys|people|all)(!|\.)/
+    ...> |> GenRegex.generate_from()
+    ...> |> Enum.take(3)
   """
 
   alias GenRegex.{

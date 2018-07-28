@@ -6,10 +6,10 @@ defmodule GenRegex do
   For negated character classes ([^...]), the generated characters will be a subset the possible wildcard values.
 
   ## Example
-      iex> ~r/(bye|hello|hi), (guys|people|all)(!|\()/
+      iex> ~r/(bye|hello|hi), (guys|people|all)(!|\.)/
       ...> |> GenRegex.generate_from()
       ...> |> Enum.take(3)
-      ["bye, all(", "bye, guys(", "hi, guys("]
+      ["bye, all!", "bye, guys!", "hi, guys."]
   """
 
   alias GenRegex.{

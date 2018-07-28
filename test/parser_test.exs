@@ -398,7 +398,6 @@ defmodule GenRegex.ParserTest do
 
     assert ast == [
              word: [
-               atom: :^,
                atom: 'a',
                atom: 'b'
              ],

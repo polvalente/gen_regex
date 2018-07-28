@@ -90,6 +90,14 @@ defmodule GenRegexTest do
     checkgen(~r/a-zA-Z0-9/)
   end
 
+  property "Should generate single char for each range rep" do
+    checkgen(~r/^[a-z]$/)
+  end
+
+  property "Should generate single element from set" do
+    checkgen(~r/^[abc]$/)
+  end
+
   property "Should generate from a{0456} as repexpr (456,456)" do
     checkgen(~r/a{0456}/)
   end

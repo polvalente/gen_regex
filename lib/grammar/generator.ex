@@ -67,29 +67,41 @@ defmodule GenRegex.Generator do
   end
 
   def generate(%Generator{type: :negset, value: value}, _parent) do
-    value =
+    excluded_chars =
       value
       |> Enum.map(&(generate(&1, :negset)))
       |> List.flatten()
+      |> MapSet.new()
 
     GenRegex.RandomString.all()
-    |> String.split("", trim: true)
-    |> :lists.subtract(value)
+    |> String.codepoints()
+    |> MapSet.new()
+    |> MapSet.difference(excluded_chars)
     |> Enum.random()
   end
 
-  def generate(%Generator{type: :range} = gen, :negset), do: generate(gen, :set)
+  def generate(%Generator{type: :range, value: value} = gen, :negset) do
+     value
+     |> do_generate_range()
+  end
+
   def generate(%Generator{type: :range, value: value}, :set) do
     value
-    |> Enum.to_list()
-    |> Enum.map(&(String.Chars.List.to_string([&1])))
-    |> List.flatten()
+    |> do_generate_range()
+    |> Enum.random()
   end
 
   def generate(%Generator{type: :range, value: value}, _parent) do
     value
-    |> Enum.take_random(1)
+    |> do_generate_range()
     |> String.Chars.List.to_string
+  end
+
+  defp do_generate_range(value) do
+    value
+    |> Enum.to_list()
+    |> Enum.map(&(String.Chars.List.to_string([&1])))
+    |> List.flatten()
   end
 
   def generate(:wildcard, :set), do: "."

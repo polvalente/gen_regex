@@ -1,8 +1,8 @@
-Nonterminals 
-word 
+Nonterminals
+word
 option
-opt_exprs 
-elem 
+opt_exprs
+elem
 set_elem
 set_elems
 set
@@ -12,29 +12,36 @@ repexpr
 wrd_elem
 nemptywrd
 expr
-exprs.
+exprs
+line.
 
-Terminals 
-'(' 
+Terminals
+'('
 ')'
 '{'
 '}'
 '['
 ']'
-'|' 
-'-' 
+'|'
+'-'
 '*'
 '+'
 '?'
 '.'
 '^'
+'$'
 ''
 range
 comma
 escape
 atom.
 
-Rootsymbol exprs.
+Rootsymbol line.
+
+line -> '^' exprs '$'                                                   : '$2'.
+line -> '^' exprs                                                       : '$2'.
+line -> exprs '$'                                                       : '$1'.
+line -> exprs                                                           : '$1'.
 
 expr -> elem                                                            : '$1'.
 expr -> word                                                            : [{word, '$1'}].
